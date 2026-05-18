@@ -1,0 +1,1 @@
+import{b as e,v as t}from"./index-DFapO0er.js";import{t as n}from"./GenericManager-C2USbvX7.js";e();var r=t();function i(){return(0,r.jsx)(n,{title:`Stats Manager`,tableKey:`stats`,fields:[{key:`num`,label:`Stat Number`,type:`text`},{key:`suf`,label:`Suffix (e.g. + or %)`,type:`text`},{key:`label`,label:`Label`,type:`text`}]})}export{i as default};

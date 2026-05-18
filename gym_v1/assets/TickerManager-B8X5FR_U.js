@@ -1,0 +1,1 @@
+import{b as e,v as t}from"./index-DFapO0er.js";import{t as n}from"./GenericManager-C2USbvX7.js";e();var r=t();function i(){return(0,r.jsx)(n,{title:`Ticker Manager`,tableKey:`ticker`,fields:[{key:`item_text`,label:`Ticker Item Text`,type:`text`}]})}export{i as default};
