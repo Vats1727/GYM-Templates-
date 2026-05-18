@@ -7,8 +7,8 @@ export default defineConfig({
   base: './',
   server: {
     proxy: {
-      '/Gym/gym_v1/server/public': {
-        target: 'http://localhost:8080',
+      '/gym_dev/gym_dev/server/public': {
+        target: 'http://localhost',
         changeOrigin: true,
       }
     }
