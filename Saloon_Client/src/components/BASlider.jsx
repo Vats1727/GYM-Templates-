@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { ArrowLeftRight } from "lucide-react";
 import { T } from "../constants/data";
+import { getImageUrl } from "../services/api";
 
 export default function BASlider({ work, theme }) {
   const c = T[theme];
@@ -25,6 +26,9 @@ export default function BASlider({ work, theme }) {
     return () => { window.removeEventListener("mouseup", up); window.removeEventListener("mousemove", mv); window.removeEventListener("touchend", up); window.removeEventListener("touchmove", mv); };
   }, [dragging, move]);
 
+  const beforeImg = work.before_image ? getImageUrl(work.before_image) : '';
+  const afterImg = work.after_image ? getImageUrl(work.after_image) : '';
+
   return (
     <div style={{ background: c.bgCard, border: `1px solid ${c.border}`, borderRadius: 6, overflow: "hidden" }}>
       <div
@@ -33,16 +37,52 @@ export default function BASlider({ work, theme }) {
         onMouseDown={(e) => { setDragging(true); move(e.clientX); }}
         onTouchStart={(e) => { setDragging(true); move(e.touches[0].clientX); }}
       >
-        <div style={{ position: "absolute", inset: 0, background: work.beforeBg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
-          <div style={{ fontSize: 36 }}>{work.emoji}</div>
-          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: 2, textTransform: "uppercase" }}>Before</div>
-          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", textAlign: "center", padding: "0 20px" }}>{work.beforeDesc}</div>
+        {/* Before Slider layer */}
+        <div style={{ 
+          position: "absolute", 
+          inset: 0, 
+          background: beforeImg ? `url(${beforeImg})` : work.beforeBg, 
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          display: "flex", 
+          flexDirection: "column", 
+          alignItems: "center", 
+          justifyContent: "center", 
+          gap: 8 
+        }}>
+          {!beforeImg && (
+            <>
+              <div style={{ fontSize: 36 }}>{work.emoji}</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: 2, textTransform: "uppercase" }}>Before</div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", textAlign: "center", padding: "0 20px" }}>{work.beforeDesc}</div>
+            </>
+          )}
         </div>
-        <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 0 ${pos}%)`, background: work.afterBg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
-          <div style={{ fontSize: 36 }}>{work.emoji}</div>
-          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", letterSpacing: 2, textTransform: "uppercase" }}>After</div>
-          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.9)", textAlign: "center", padding: "0 20px" }}>{work.afterDesc}</div>
+
+        {/* After Slider layer */}
+        <div style={{ 
+          position: "absolute", 
+          inset: 0, 
+          clipPath: `inset(0 0 0 ${pos}%)`, 
+          background: afterImg ? `url(${afterImg})` : work.afterBg, 
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          display: "flex", 
+          flexDirection: "column", 
+          alignItems: "center", 
+          justifyContent: "center", 
+          gap: 8 
+        }}>
+          {!afterImg && (
+            <>
+              <div style={{ fontSize: 36 }}>{work.emoji}</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", letterSpacing: 2, textTransform: "uppercase" }}>After</div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.9)", textAlign: "center", padding: "0 20px" }}>{work.afterDesc}</div>
+            </>
+          )}
         </div>
+
+        {/* Drag handle line */}
         <div style={{ position: "absolute", top: 0, bottom: 0, left: `${pos}%`, transform: "translateX(-50%)", width: 2, background: "rgba(255,255,255,0.9)", pointerEvents: "none" }}>
           <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 34, height: 34, borderRadius: "50%", background: "#fff", border: "2px solid rgba(0,0,0,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.3)", color: "#333" }}>
             <ArrowLeftRight size={14} />
@@ -53,10 +93,10 @@ export default function BASlider({ work, theme }) {
       </div>
       <div style={{ padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: c.text }}>{work.tag}</div>
-          <div style={{ fontSize: 11, color: c.textMuted }}>by {work.artist} · {work.time}</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: c.text }}>{work.title || work.tag}</div>
+          <div style={{ fontSize: 11, color: c.textMuted }}>{work.desc || `by Velour Specialists · ${work.time || '1 hr'}`}</div>
         </div>
-        <div style={{ fontSize: 10, padding: "3px 10px", borderRadius: 20, background: c.tag, color: c.tagText, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" }}>{work.type}</div>
+        <div style={{ fontSize: 10, padding: "3px 10px", borderRadius: 20, background: c.tag, color: c.tagText, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" }}>{work.type || 'Color'}</div>
       </div>
     </div>
   );

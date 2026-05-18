@@ -1,30 +1,76 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { STAFF } from "../constants/data";
 import Av from "./Av";
+import useFetchData from "../hooks/useFetchData";
+import { getImageUrl } from "../services/api";
+import VisualEditorTrigger from "./Admin/VisualEditorTrigger";
+import GlobalHeadingEditor from "./Admin/GlobalHeadingEditor";
 
 export default function Team({ c, bk, setBk, go }) {
   const [activeTab, setActiveTab] = useState("all");
-  const filtStaff = activeTab === "all" ? STAFF : STAFF.filter((s) => s.type === activeTab);
+  const { data: dbStaff } = useFetchData('team', []);
+
+  const parseSlots = (slotsData) => {
+    if (!slotsData) return ["10:00 AM", "1:00 PM", "4:00 PM"];
+    if (Array.isArray(slotsData)) return slotsData;
+    try {
+      const parsed = JSON.parse(slotsData);
+      if (Array.isArray(parsed)) return parsed;
+    } catch (e) {}
+    if (typeof slotsData === 'string') {
+      return slotsData.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    return ["10:00 AM", "1:00 PM", "4:00 PM"];
+  };
+
+  const specialists = React.useMemo(() => {
+    if (!dbStaff || dbStaff.length === 0) return STAFF;
+    return dbStaff.map(m => ({
+      name: m.name,
+      role: m.role || "Specialist",
+      type: (m.role || "").toLowerCase().includes("barber") ? "barber" : "beauty",
+      exp: m.experience || "5 Years",
+      specialty: m.specialty || "Precision cut & styling",
+      init: m.name ? m.name.split(' ').map(n => n[0]).join('').substring(0, 2) : "ST",
+      col: c.accent,
+      slots: parseSlots(m.slots),
+      image: m.image ? getImageUrl(m.image) : ''
+    }));
+  }, [dbStaff, c.accent]);
+
+  const filtStaff = activeTab === "all" 
+    ? specialists 
+    : specialists.filter((s) => s.type === activeTab);
 
   return (
-    <section id="team" style={{ background: c.bgAlt }}>
+    <section id="team" style={{ background: c.bgAlt, position: 'relative' }}>
+      <VisualEditorTrigger sectionPath="/admin/team" />
       <div className="wrap">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48, flexWrap: "wrap", gap: 20 }}>
           <div>
             <div className="label">The Artists</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Meet Your Stylists</h2>
+            <GlobalHeadingEditor slug="team_heading" defaultText="Meet Your Stylists" />
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             {[["all", "All"], ["barber", "Barbers"], ["beauty", "Beauticians"]].map(([v, l]) => (
               <button key={v} onClick={() => setActiveTab(v)} style={{ padding: "7px 18px", borderRadius: 2, border: `1px solid ${activeTab === v ? c.accent : c.border}`, background: activeTab === v ? c.accent + "18" : "transparent", color: activeTab === v ? c.accent : c.textMuted, fontSize: 11, fontFamily: "inherit", transition: "all 0.2s" }}>{l}</button>
             ))}
           </div>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: 20 }}>
+        
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 20 }}>
           {filtStaff.map((m) => (
             <div key={m.name} className="card" style={{ padding: "24px" }}>
               <div style={{ display: "flex", gap: 16, marginBottom: 18 }}>
-                <Av init={m.init} col={m.col} size={56} />
+                {m.image ? (
+                  <img 
+                    src={m.image} 
+                    alt={m.name} 
+                    style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${c.accent}` }} 
+                  />
+                ) : (
+                  <Av init={m.init} col={m.col} size={56} />
+                )}
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                     <div>

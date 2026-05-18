@@ -1,13 +1,74 @@
-import { MapPin, Clock, Phone, Mail, Car, Calendar, Sparkles, Leaf } from "lucide-react";
+import React from "react";
+import { MapPin, Clock, Phone, Mail, Car, Calendar as CalendarIcon, Sparkles, Leaf } from "lucide-react";
 import { SERVICES, STAFF } from "../constants/data";
 import Av from "./Av";
+import useFetchData from "../hooks/useFetchData";
+import { getImageUrl } from "../services/api";
+import { crudService } from "../services/crud";
 
 export default function Booking({ theme, c, bk, setBk, bkStep, setBkStep, booked, setBooked }) {
+  // Fetch active services and team members dynamically to populate select drop-downs
+  const { data: dbServices } = useFetchData('services', []);
+  const { data: dbStaff } = useFetchData('team', []);
+
+  // Map categories and items
+  const dynamicServicesList = React.useMemo(() => {
+    if (!dbServices || dbServices.length === 0) {
+      return SERVICES.flatMap((cat) => cat.items.map((item) => ({ name: item.n, price: item.p })));
+    }
+    return dbServices.map(item => ({
+      name: item.name,
+      price: item.price
+    }));
+  }, [dbServices]);
+
+  const dynamicStaffList = React.useMemo(() => {
+    if (!dbStaff || dbStaff.length === 0) {
+      return STAFF.map(s => ({
+        name: s.name,
+        role: s.role,
+        init: s.init,
+        col: s.col,
+        image: ''
+      }));
+    }
+    return dbStaff.map(m => ({
+      name: m.name,
+      role: m.role || "Specialist",
+      init: m.name ? m.name.split(' ').map(n => n[0]).join('').substring(0, 2) : "ST",
+      col: c.accent,
+      image: m.image ? getImageUrl(m.image) : ''
+    }));
+  }, [dbStaff, c.accent]);
+
+  const handleConfirmBooking = async () => {
+    try {
+      await crudService.create('admin/bookings', {
+        name: bk.name,
+        phone: bk.phone,
+        email: bk.email,
+        service: bk.service,
+        stylist: bk.staff,
+        date: bk.date,
+        time: bk.time,
+        note: bk.note || '',
+        status: 'Pending'
+      });
+      
+      // Successfully created! Trigger refresh events and show success screen
+      setBooked(true);
+      window.dispatchEvent(new CustomEvent('api-data-updated'));
+    } catch (error) {
+      console.error('Failed to register booking:', error);
+      alert('Could not process appointment request. Please verify details and try again.');
+    }
+  };
+
   return (
     <section id="book" style={{ background: c.bg }}>
       <div className="wrap">
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1.1fr", gap: 64, alignItems: "start" }}>
-          <div style={{ position: "sticky", top: 90 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 64, alignItems: "start" }}>
+          <div>
             <div className="label">Reserve Your Spot</div>
             <h2 className="h2" style={{ marginTop: 12 }}>Book an<br />Appointment</h2>
             <div className="rule" />
@@ -19,7 +80,7 @@ export default function Booking({ theme, c, bk, setBk, bkStep, setBkStep, booked
                 [<Mail size={17} />, "Email", "hello@velourstudio.in"],
                 [<Car size={17} />, "Parking", "Free client parking behind the building"]].map(([ico, lbl, val]) => (
                 <div key={lbl} style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <div style={{ width: 38, height: 38, borderRadius: 3, background: c.bgCard, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, flexShrink: 0 }}>{ico}</div>
+                  <div style={{ width: 38, height: 38, borderRadius: 3, background: c.bgCard, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, flexShrink: 0, color: c.accent }}>{ico}</div>
                   <div><div style={{ fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase", color: c.accent, marginBottom: 3 }}>{lbl}</div><div style={{ fontSize: 13, color: c.textMuted, lineHeight: 1.5 }}>{val}</div></div>
                 </div>
               ))}
@@ -58,15 +119,19 @@ export default function Booking({ theme, c, bk, setBk, bkStep, setBkStep, booked
                       <select value={bk.service} onChange={(e) => setBk({ ...bk, service: e.target.value })} style={{ width: "100%", padding: "13px 16px", borderRadius: 3, background: c.bgAlt, border: `1px solid ${c.border}`, color: bk.service ? c.text : c.textFaint, fontSize: 14, transition: "border 0.2s" }}
                         onFocus={(e) => (e.target.style.borderColor = c.accent)} onBlur={(e) => (e.target.style.borderColor = c.border)}>
                         <option value="">Choose a service...</option>
-                        {SERVICES.flatMap((cat) => cat.items.map((item) => (<option key={item.n} value={item.n}>{item.n} — {item.p}</option>)))}
+                        {dynamicServicesList.map((item) => (<option key={item.name} value={item.name}>{item.name} — {item.price}</option>))}
                       </select>
                     </div>
                     <div>
                       <label style={{ fontSize: 11, letterSpacing: 1.5, textTransform: "uppercase", color: c.textMuted, display: "block", marginBottom: 8 }}>Choose Your Artist</label>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                        {STAFF.map((m) => (
+                        {dynamicStaffList.map((m) => (
                           <div key={m.name} onClick={() => setBk({ ...bk, staff: m.name })} style={{ padding: "12px 14px", background: bk.staff === m.name ? c.accent + "18" : c.bgAlt, border: `1px solid ${bk.staff === m.name ? c.accent : c.border}`, borderRadius: 4, cursor: "pointer", display: "flex", gap: 10, alignItems: "center", transition: "all 0.2s" }}>
-                            <Av init={m.init} col={m.col} size={32} />
+                            {m.image ? (
+                              <img src={m.image} alt={m.name} style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
+                            ) : (
+                              <Av init={m.init} col={m.col} size={32} />
+                            )}
                             <div><div style={{ fontSize: 12, fontWeight: 600, color: c.text }}>{m.name.split(" ")[0]}</div><div style={{ fontSize: 10, color: c.textMuted }}>{m.role}</div></div>
                           </div>
                         ))}
@@ -88,7 +153,7 @@ export default function Booking({ theme, c, bk, setBk, bkStep, setBkStep, booked
                     <div>
                       <label style={{ fontSize: 11, letterSpacing: 1.5, textTransform: "uppercase", color: c.textMuted, display: "block", marginBottom: 8 }}>Preferred Time</label>
                       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6 }}>
-                        {["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"].map((t) => (
+                        {["09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM", "08:00 PM"].map((t) => (
                           <button key={t} onClick={() => setBk({ ...bk, time: t })} style={{ padding: "9px 4px", border: `1px solid ${bk.time === t ? c.accent : c.border}`, borderRadius: 3, background: bk.time === t ? c.accent + "20" : "transparent", color: bk.time === t ? c.accent : c.textMuted, fontSize: 12, fontFamily: "inherit", transition: "all 0.2s" }}>{t}</button>
                         ))}
                       </div>
@@ -122,7 +187,7 @@ export default function Booking({ theme, c, bk, setBk, bkStep, setBkStep, booked
                     </div>
                     <div style={{ display: "flex", gap: 10 }}>
                       <button className="btn btn-o" onClick={() => setBkStep(2)} style={{ flex: 1, justifyContent: "center" }}>← Back</button>
-                      <button className="btn btn-p" disabled={!bk.name || !bk.email} onClick={() => setBooked(true)} style={{ flex: 2, justifyContent: "center", opacity: !bk.name || !bk.email ? 0.5 : 1 }}>Confirm Booking ✓</button>
+                      <button className="btn btn-p" disabled={!bk.name || !bk.email} onClick={handleConfirmBooking} style={{ flex: 2, justifyContent: "center", opacity: !bk.name || !bk.email ? 0.5 : 1 }}>Confirm Booking ✓</button>
                     </div>
                   </div>
                 )}

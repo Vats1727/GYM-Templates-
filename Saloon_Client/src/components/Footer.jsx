@@ -1,18 +1,38 @@
+import React from "react";
+import useFetchData from "../hooks/useFetchData";
+import VisualEditorTrigger from "./Admin/VisualEditorTrigger";
+
 export default function Footer({ c }) {
+  const { data: dbFooter } = useFetchData('footer/active', []);
+  const footerData = dbFooter && dbFooter.length > 0 ? dbFooter[0] : {
+    copyright_text: `© ${new Date().getFullYear()} Velour Studio · All rights reserved · Ahmedabad, Gujarat`,
+    tagline: "Ahmedabad's award-winning beauty studio. Where craft meets care.",
+    facebook_url: "#",
+    instagram_url: "#",
+    twitter_url: "#",
+    youtube_url: "#"
+  };
+
   return (
-    <footer style={{ background: c.bgAlt, borderTop: `1px solid ${c.border}`, padding: "56px 0 28px" }}>
+    <footer style={{ background: c.bgAlt, borderTop: `1px solid ${c.border}`, padding: "56px 0 28px", position: 'relative' }} id="footer">
+      <VisualEditorTrigger sectionPath="/admin/footer" />
       <div className="wrap">
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 48 }}>
-          <div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 40, marginBottom: 48 }}>
+          <div style={{ gridColumn: 'span 2' }}>
             <div style={{ fontFamily: "'Lora', serif", fontSize: 24, fontWeight: 600, color: c.text, marginBottom: 14, letterSpacing: 0.5 }}>Velour<span style={{ color: c.accent }}>.</span></div>
-            <p style={{ fontSize: 13, color: c.textMuted, lineHeight: 1.8, maxWidth: 260, marginBottom: 20 }}>Ahmedabad's award-winning beauty studio. Where craft meets care.</p>
+            <p style={{ fontSize: 13, color: c.textMuted, lineHeight: 1.8, maxWidth: 260, marginBottom: 20 }}>{footerData.tagline}</p>
             <div style={{ display: "flex", gap: 8 }}>
-              {["IG", "FB", "TW", "YT"].map((s) => (
-                <div key={s} style={{ width: 34, height: 34, borderRadius: "50%", border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", color: c.textMuted, fontSize: 11, fontWeight: 600, cursor: "pointer", transition: "all 0.2s" }}
+              {[
+                { label: "IG", url: footerData.instagram_url },
+                { label: "FB", url: footerData.facebook_url },
+                { label: "TW", url: footerData.twitter_url },
+                { label: "YT", url: footerData.youtube_url }
+              ].map((s) => (
+                <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" style={{ width: 34, height: 34, borderRadius: "50%", border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", color: c.textMuted, fontSize: 11, fontWeight: 600, cursor: "pointer", transition: "all 0.2s", textDecoration: 'none' }}
                   onMouseEnter={(e) => { e.currentTarget.style.borderColor = c.accent; e.currentTarget.style.color = c.accent; }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = c.border; e.currentTarget.style.color = c.textMuted; }}>
-                  {s}
-                </div>
+                  {s.label}
+                </a>
               ))}
             </div>
           </div>
@@ -42,7 +62,7 @@ export default function Footer({ c }) {
           </div>
         </div>
         <div style={{ borderTop: `1px solid ${c.border}`, paddingTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
-          <div style={{ fontSize: 12, color: c.textFaint }}>© 2025 Velour Studio · All rights reserved · Ahmedabad, Gujarat</div>
+          <div style={{ fontSize: 12, color: c.textFaint }}>{footerData.copyright_text}</div>
           <div style={{ display: "flex", gap: 20 }}>
             {["Privacy Policy", "Terms", "Accessibility"].map((l) => (
               <div key={l} style={{ fontSize: 12, color: c.textFaint, cursor: "pointer" }}>{l}</div>

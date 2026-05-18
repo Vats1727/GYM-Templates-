@@ -1,21 +1,44 @@
+import React from "react";
 import { PRODUCTS } from "../constants/data";
+import useFetchData from "../hooks/useFetchData";
+import { getImageUrl } from "../services/api";
+import VisualEditorTrigger from "./Admin/VisualEditorTrigger";
+import GlobalHeadingEditor from "./Admin/GlobalHeadingEditor";
 
 export default function Products({ c, go }) {
+  const { data: dbProducts } = useFetchData('products', []);
+
+  const items = dbProducts && dbProducts.length > 0
+    ? dbProducts.map(p => ({
+        name: p.name,
+        category: p.category || "Haircare",
+        desc: p.desc || "Professional studio formula",
+        price: p.price,
+        image: p.image ? getImageUrl(p.image) : '',
+        emoji: "🧴"
+      }))
+    : PRODUCTS;
+
   return (
-    <section style={{ background: c.bgAlt, padding: "72px 0" }}>
+    <section style={{ background: c.bgAlt, padding: "72px 0", position: 'relative' }}>
+      <VisualEditorTrigger sectionPath="/admin/products" />
       <div className="wrap">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 36, flexWrap: "wrap", gap: 16 }}>
           <div>
             <div className="label">In-Studio Shop</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Professional Products</h2>
+            <GlobalHeadingEditor slug="products_heading" defaultText="Professional Products" />
           </div>
           <button className="btn btn-o" style={{ fontSize: 11 }}>View All Products →</button>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 16 }}>
-          {PRODUCTS.map((p) => (
+          {items.map((p) => (
             <div key={p.name} className="card" style={{ padding: "22px" }}>
-              <div style={{ width: 52, height: 52, borderRadius: 6, background: c.bgAlt, display: "flex", alignItems: "center", justifyContent: "center", color: c.accent, marginBottom: 14, border: `1px solid ${c.border}` }}>
-                {p.emoji}
+              <div style={{ width: 52, height: 52, borderRadius: 6, background: c.bgAlt, display: "flex", alignItems: "center", justifyContent: "center", color: c.accent, marginBottom: 14, border: `1px solid ${c.border}`, overflow: 'hidden' }}>
+                {p.image ? (
+                  <img src={p.image} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <span style={{ fontSize: '20px' }}>{p.emoji}</span>
+                )}
               </div>
               <div className="pill" style={{ marginBottom: 10, fontSize: 9 }}>{p.category}</div>
               <div style={{ fontSize: 14, fontWeight: 500, color: c.text, marginBottom: 6 }}>{p.name}</div>
