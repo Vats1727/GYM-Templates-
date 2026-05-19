@@ -3,15 +3,22 @@ import useFetchData from '../hooks/useFetchData';
 import { CASE_STUDIES } from '../constants/data';
 
 export default function CaseStudies() {
-  const { data: cases } = useFetchData('case_studies', CASE_STUDIES);
+  const { data: cases } = useFetchData('case_studies/active', CASE_STUDIES);
+  const { data: dbHeading } = useFetchData('case_studies_heading/active', []);
+
+  const heading = dbHeading && dbHeading.length > 0 ? dbHeading[0] : {
+    tag: "Real Results",
+    title: "Documented Case Studies",
+    desc: "Anonymised patient cases with measurable outcomes — because results matter more than promises."
+  };
 
   return (
     <section className="success" id="success">
       <div className="container">
         <div className="reveal visible">
-          <div className="section-tag">Real Results</div>
-          <h2 className="section-title">Documented Case Studies</h2>
-          <p className="section-desc">Anonymised patient cases with measurable outcomes — because results matter more than promises.</p>
+          <div className="section-tag">{heading.tag}</div>
+          <h2 className="section-title">{heading.title}</h2>
+          <p className="section-desc">{heading.desc}</p>
         </div>
         <div className="cases-grid">
           {cases.map((c, idx) => (

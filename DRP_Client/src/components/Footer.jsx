@@ -1,7 +1,20 @@
 import React from 'react';
 import { Mail, MessageSquare, MapPin, Clock } from 'lucide-react';
+import useFetchData from '../hooks/useFetchData';
 
 export default function Footer() {
+  const { data: dbFooter } = useFetchData('footer/active', []);
+
+  const footer = dbFooter && dbFooter.length > 0 ? dbFooter[0] : {
+    logo_text: "Dr. Aisha",
+    logo_accent: "Malik",
+    description: "Holistic healing through the wisdom of homoeopathy and Sunnah-based Hijama therapy. Serving patients globally via secure online consultations.",
+    email: "dr.aisha@healnaturally.com",
+    whatsapp: "+92 300 123 4567",
+    address: "Online · Worldwide",
+    hours: "9 AM – 9 PM PKT"
+  };
+
   const handleScrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) {
@@ -9,15 +22,17 @@ export default function Footer() {
     }
   };
 
+  const cleanWhatsapp = footer.whatsapp ? footer.whatsapp.replace(/\D/g, '') : "923001234567";
+
   return (
     <footer>
       <div className="footer-inner">
         <div className="footer-brand">
           <div className="nav-brand" style={{ fontSize: '1.15rem' }}>
             <div className="dot"></div>
-            Dr. Aisha <span>Malik</span>
+            {footer.logo_text} <span>{footer.logo_accent}</span>
           </div>
-          <p>Holistic healing through the wisdom of homoeopathy and Sunnah-based Hijama therapy. Serving patients globally via secure online consultations.</p>
+          <p>{footer.description}</p>
         </div>
         <div className="footer-col">
           <h4>Navigate</h4>
@@ -120,15 +135,15 @@ export default function Footer() {
         <div className="footer-col">
           <h4>Contact</h4>
           <ul>
-            <li><a href="mailto:dr.aisha@healnaturally.com" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><Mail size={16} /> dr.aisha@healnaturally.com</a></li>
-            <li><a href="https://wa.me/+923001234567" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><MessageSquare size={16} /> WhatsApp +92 300 123 4567</a></li>
-            <li><a href="#home" onClick={(e) => { e.preventDefault(); handleScrollTo('home'); }} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><MapPin size={16} /> Online · Worldwide</a></li>
-            <li><a href="#home" onClick={(e) => { e.preventDefault(); handleScrollTo('home'); }} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><Clock size={16} /> 9 AM – 9 PM PKT</a></li>
+            <li><a href={`mailto:${footer.email}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><Mail size={16} /> {footer.email}</a></li>
+            <li><a href={`https://wa.me/${cleanWhatsapp}`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><MessageSquare size={16} /> WhatsApp {footer.whatsapp}</a></li>
+            <li><a href="#home" onClick={(e) => { e.preventDefault(); handleScrollTo('home'); }} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><MapPin size={16} /> {footer.address}</a></li>
+            <li><a href="#home" onClick={(e) => { e.preventDefault(); handleScrollTo('home'); }} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><Clock size={16} /> {footer.hours}</a></li>
           </ul>
         </div>
       </div>
       <div className="footer-bottom container">
-        <span>© {new Date().getFullYear()} Dr. Aisha Malik. All rights reserved.</span>
+        <span>© {new Date().getFullYear()} {footer.logo_text} {footer.logo_accent}. All rights reserved.</span>
         <span>Designed with care for patient wellbeing</span>
       </div>
     </footer>

@@ -1,13 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Sun, Moon } from 'lucide-react';
+import useFetchData from '../hooks/useFetchData';
 
 export default function Navbar() {
+  const { data: dbNavbar } = useFetchData('navbar/active', []);
   const [theme, setTheme] = useState(document.documentElement.dataset.theme || 'light');
   const [font, setFont] = useState(document.documentElement.dataset.font || 'serif');
   const [fontMenuOpen, setFontMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const fontMenuRef = useRef(null);
+
+  const navData = dbNavbar && dbNavbar.length > 0 ? {
+    logo_text: dbNavbar[0].logo_text || "Dr. Aisha",
+    logo_accent: dbNavbar[0].logo_accent || "Malik",
+    cta_text: dbNavbar[0].cta_text || "Book Consult"
+  } : {
+    logo_text: "Dr. Aisha",
+    logo_accent: "Malik",
+    cta_text: "Book Consult"
+  };
 
   useEffect(() => {
     // Sync initial state with DOM
@@ -66,7 +78,7 @@ export default function Navbar() {
       <nav>
         <div className="nav-brand" style={{ cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <div className="dot"></div>
-          Dr. Aisha <span>Malik</span>
+          {navData.logo_text} <span>{navData.logo_accent}</span>
         </div>
 
         <ul className="nav-links">
@@ -133,7 +145,7 @@ export default function Navbar() {
             className="btn-consult"
             onClick={() => handleScrollTo('booking')}
           >
-            Book Consult
+            {navData.cta_text}
           </button>
 
           <div className="hamburger" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>

@@ -1,32 +1,32 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-/**
- * A hook that retrieves data from a local fallback object.
- * When the server is created, this hook can be swapped to pull from VITE_API_URL/endpoints.
- */
-export default function useFetchData(endpoint, fallbackData) {
-  const [data, setData] = useState(fallbackData);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+export default function useFetchData(endpoint, defaultData = null) {
+  const [data, setData] = useState(defaultData);
+  const [loading, setLoading] = useState(true);
 
-  // For future implementation:
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const baseUrl = import.meta.env.VITE_API_URL || '/server';
-  //       const res = await fetch(`${baseUrl}/${endpoint}`);
-  //       const json = await res.json();
-  //       setData(json);
-  //     } catch (err) {
-  //       setError(err);
-  //       console.error("Fetch failed: ", err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetch();
-  // }, [endpoint]);
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_API_URL || '/GYM-Templates-/DRP_Server/public';
+        const res = await axios.get(`${baseUrl}/${endpoint}`);
+        setData(res.data);
+      } catch (err) {
+        console.error("Failed to fetch", endpoint, err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetch();
 
-  return { data, loading, error };
+    const handleMsg = (event) => {
+      if (event.data && event.data.type === 'LIVE_DATA_REFRESH') {
+        fetch();
+      }
+    };
+    window.addEventListener('message', handleMsg);
+    return () => window.removeEventListener('message', handleMsg);
+  }, [endpoint]);
+
+  return { data, loading };
 }
