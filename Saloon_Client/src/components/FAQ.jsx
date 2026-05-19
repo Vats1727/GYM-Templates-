@@ -20,8 +20,7 @@ export default function FAQ({ c }) {
       <VisualEditorTrigger sectionPath="/admin/faq" />
       <div className="wrap" style={{ maxWidth: 780 }}>
         <div style={{ textAlign: "center", marginBottom: 48 }}>
-          <div className="label">Common Questions</div>
-          <GlobalHeadingEditor slug="faq_heading" defaultText="FAQs" />
+          <GlobalHeadingEditor slug="faq_heading" defaultText="FAQs" defaultTag="Common Questions" centered />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
           {items.map((f, i) => (

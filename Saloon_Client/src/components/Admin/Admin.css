@@ -92,10 +92,15 @@
   padding: 14px 18px; 
   border: 2px solid #f1f5f9; 
   background: #f8fafc;
+  color: #0f172a !important; /* Forces dark slate text even if parent has dark/light mode white text overrides */
   border-radius: 12px; 
   font-size: 15px; 
   transition: all 0.2s; 
   font-family: inherit;
+}
+
+.admin-input::placeholder, .admin-textarea::placeholder {
+  color: #94a3b8 !important; /* Ensure readable, beautiful dark-muted placeholder text */
 }
 
 .admin-input:focus, .admin-textarea:focus { 

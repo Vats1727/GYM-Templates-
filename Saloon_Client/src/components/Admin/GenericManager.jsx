@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { crudService } from '../../services/crud';
 import { useToast } from './ToastContext';
 import * as LucideIcons from 'lucide-react';
+import { GROOMING_ICONS } from '../../utils/groomingIcons';
 import GlobalHeadingEditor from './GlobalHeadingEditor';
 
 export default function GenericManager({ title, tableKey, fields, headingSlug, isSingleRow = false }) {
@@ -26,8 +27,8 @@ export default function GenericManager({ title, tableKey, fields, headingSlug, i
   const getImageUrl = (path) => {
     if (!path) return '';
     if (path.startsWith('http') || path.startsWith('blob:')) return path;
-    const baseUrl = import.meta.env.VITE_API_URL || '/gym_v1/server/public';
-    return `${baseUrl}/${path}`;
+    const baseUrl = import.meta.env.VITE_API_URL || '/GYM-Templates-/Saloon_Server/public';
+    return `${baseUrl}/${path.startsWith('upload/') ? path : 'upload/' + path}`;
   };
 
   useEffect(() => {
@@ -256,6 +257,18 @@ export default function GenericManager({ title, tableKey, fields, headingSlug, i
                     <option value={0}>No</option>
                     <option value={1}>Yes</option>
                   </select>
+                ) : field.type === 'select' ? (
+                  <select
+                    className="admin-input"
+                    value={formData[field.key] || ''}
+                    onChange={e => updateFormData({ ...formData, [field.key]: e.target.value })}
+                    style={{ padding: 10, borderRadius: 6, border: '1px solid #cbd5e1', background: '#fff' }}
+                  >
+                    <option value="">Select Option...</option>
+                    {(field.options || []).map(opt => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
                 ) : field.type === 'icon' ? (
                   <div style={{ position: 'relative' }}>
                     <div 
@@ -267,10 +280,14 @@ export default function GenericManager({ title, tableKey, fields, headingSlug, i
                       }}
                     >
                       <div style={{ padding: '6px', background: '#fff', borderRadius: '6px', border: '1px solid #e2e8f0', display: 'flex' }}>
-                        {React.createElement(
-                          (formData[field.key] && LucideIcons[formData[field.key]]) ? LucideIcons[formData[field.key]] : LucideIcons.HelpCircle,
-                          { size: 16, color: '#7EC8A0' }
-                        )}
+                        {(() => {
+                          const iconName = formData[field.key];
+                          if (iconName && GROOMING_ICONS[iconName]) {
+                            return React.createElement(GROOMING_ICONS[iconName], { size: 16, style: { width: 16, height: 16 }, color: '#7EC8A0' });
+                          }
+                          const IconComp = (iconName && LucideIcons[iconName]) ? LucideIcons[iconName] : LucideIcons.HelpCircle;
+                          return React.createElement(IconComp, { size: 16, color: '#7EC8A0' });
+                        })()}
                       </div>
                       <span>{formData[field.key] || 'Select Icon'}</span>
                       <LucideIcons.ChevronDown size={14} style={{ marginLeft: 'auto' }} />
@@ -296,6 +313,26 @@ export default function GenericManager({ title, tableKey, fields, headingSlug, i
                           />
                         </div>
                         <div className="icon-grid-scroll" style={{ maxHeight: '200px', overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 6 }}>
+                          {Object.keys(GROOMING_ICONS).map(iconName => (
+                            <div 
+                              key={iconName} 
+                              className={'icon-grid-item ' + (formData[field.key] === iconName ? 'active' : '')}
+                              data-name={iconName}
+                              title={`Grooming: ${iconName}`}
+                              style={{
+                                display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 8, borderRadius: 6, cursor: 'pointer',
+                                background: formData[field.key] === iconName ? '#e2f5ec' : '#fff9f0',
+                                border: formData[field.key] === iconName ? '1px solid #7EC8A0' : '1px solid #ffedd5'
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                updateFormData({ ...formData, [field.key]: iconName });
+                                setActiveDropdown(null);
+                              }}
+                            >
+                              {React.createElement(GROOMING_ICONS[iconName], { size: 16, style: { width: 16, height: 16 }, color: formData[field.key] === iconName ? '#7EC8A0' : '#ea580c' })}
+                            </div>
+                          ))}
                           {Object.keys(LucideIcons)
                             .filter(key => /^[A-Z]/.test(key) && key !== 'Icon' && key !== 'Lucide' && (typeof LucideIcons[key] === 'function' || typeof LucideIcons[key] === 'object'))
                             .map(iconName => (
@@ -393,47 +430,29 @@ export default function GenericManager({ title, tableKey, fields, headingSlug, i
                       </button>
                     ))}
                   </div>
-                ) : field.type === 'repeater' ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    {(Array.isArray(formData[field.key]) ? formData[field.key] : []).map((val, idx) => (
-                      <div key={idx} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                        {typeof val === 'object' && 'ok' in val && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const next = [...(formData[field.key] || [])];
-                              next[idx] = { ...val, ok: !val.ok };
-                              updateFormData({ ...formData, [field.key]: next });
-                            }}
-                            style={{
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              width: '40px', height: '40px', borderRadius: '8px',
-                              background: val.ok ? '#ecfdf5' : '#fef2f2',
-                              color: val.ok ? '#10b981' : '#ef4444',
-                              border: val.ok ? '1px solid #a7f3d0' : '1px solid #fee2e2',
-                              cursor: 'pointer', fontSize: '18px', fontWeight: 'bold'
-                            }}
-                            title={val.ok ? "Active Feature" : "Inactive Feature"}
-                          >
-                            {val.ok ? "✓" : "✕"}
-                          </button>
-                        )}
-                        <input 
-                          type="text"
-                          className="admin-input"
-                          value={typeof val === 'object' ? (val.text || '') : (val || '')}
-                          onChange={(e) => {
-                            const next = [...(formData[field.key] || [])];
-                            if (typeof val === 'object') {
-                              next[idx] = { ...val, text: e.target.value };
-                            } else {
-                              next[idx] = e.target.value;
-                            }
-                            updateFormData({ ...formData, [field.key]: next });
-                          }}
-                          placeholder={`Enter item ${idx + 1}...`}
-                          style={{ flex: 1, padding: 10, borderRadius: 12, border: '1px solid #e2e8f0', background: '#fff', outline: 'none' }}
-                        />
+                ) : field.type === 'object_list' ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '16px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                    {(Array.isArray(formData[field.key]) ? formData[field.key] : []).map((item, idx) => (
+                      <div key={idx} style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'flex-start', background: '#fff', padding: '16px', borderRadius: '10px', border: '1px solid #cbd5e1', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, flex: 1, minWidth: '240px' }}>
+                          {(field.schema || []).map(sch => (
+                            <div key={sch.key} style={{ display: 'flex', flexDirection: 'column', gap: 4, gridColumn: sch.gridColumn || 'span 1' }}>
+                              <span style={{ fontSize: 11, fontWeight: 600, color: '#64748b' }}>{sch.label}</span>
+                              <input 
+                                type={sch.type || 'text'}
+                                className="admin-input"
+                                value={item[sch.key] || ''}
+                                onChange={(e) => {
+                                  const next = [...(formData[field.key] || [])];
+                                  next[idx] = { ...item, [sch.key]: e.target.value };
+                                  updateFormData({ ...formData, [field.key]: next });
+                                }}
+                                placeholder={sch.placeholder || ''}
+                                style={{ padding: '8px 10px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', fontSize: '13px' }}
+                              />
+                            </div>
+                          ))}
+                        </div>
                         <button 
                           type="button"
                           onClick={() => {
@@ -442,14 +461,96 @@ export default function GenericManager({ title, tableKey, fields, headingSlug, i
                           }}
                           style={{ 
                             display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                            width: '40px', height: '40px', borderRadius: '8px', 
-                            background: '#fef2f2', color: '#ef4444', border: '1px solid #fee2e2', cursor: 'pointer' 
+                            width: '36px', height: '36px', borderRadius: '8px', 
+                            background: '#fef2f2', color: '#ef4444', border: '1px solid #fee2e2', cursor: 'pointer',
+                            marginTop: '20px'
                           }}
+                          title="Delete Item"
                         >
                           <LucideIcons.Trash2 size={16} />
                         </button>
                       </div>
                     ))}
+                    <button 
+                      type="button" 
+                      onClick={() => {
+                        const currentArr = Array.isArray(formData[field.key]) ? formData[field.key] : [];
+                        const newItem = {};
+                        (field.schema || []).forEach(sch => { newItem[sch.key] = ''; });
+                        updateFormData({ ...formData, [field.key]: [...currentArr, newItem] });
+                      }}
+                      style={{ 
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, 
+                        padding: '12px', borderRadius: '10px', border: '2px dashed #cbd5e1', 
+                        background: '#fff', color: '#64748b', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#7EC8A0'; e.currentTarget.style.color = '#3D7A58'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.color = '#64748b'; }}
+                    >
+                      <LucideIcons.Plus size={16} /> Add New {field.label.split(' ')[0].replace(/[\(\)]/g, '')} Item
+                    </button>
+                  </div>
+                ) : field.type === 'repeater' ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {(Array.isArray(formData[field.key]) ? formData[field.key] : []).map((val, idx) => {
+                      const isValObj = typeof val === 'object' && val !== null;
+                      return (
+                        <div key={idx} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                          {isValObj && 'ok' in val && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const next = [...(formData[field.key] || [])];
+                                next[idx] = { ...val, ok: !val.ok };
+                                updateFormData({ ...formData, [field.key]: next });
+                              }}
+                              style={{
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                width: '40px', height: '40px', borderRadius: '8px',
+                                background: val.ok ? '#ecfdf5' : '#fef2f2',
+                                color: val.ok ? '#10b981' : '#ef4444',
+                                border: val.ok ? '1px solid #a7f3d0' : '1px solid #fee2e2',
+                                cursor: 'pointer', fontSize: '18px', fontWeight: 'bold'
+                              }}
+                              title={val.ok ? "Active Feature" : "Inactive Feature"}
+                            >
+                              {val.ok ? "✓" : "✕"}
+                            </button>
+                          )}
+                          <input 
+                            type="text"
+                            className="admin-input"
+                            value={isValObj ? (val.text || '') : (val || '')}
+                            onChange={(e) => {
+                              const next = [...(formData[field.key] || [])];
+                              if (isValObj) {
+                                next[idx] = { ...val, text: e.target.value };
+                              } else {
+                                next[idx] = e.target.value;
+                              }
+                              updateFormData({ ...formData, [field.key]: next });
+                            }}
+                            placeholder={`Enter item ${idx + 1}...`}
+                            style={{ flex: 1, padding: 10, borderRadius: 12, border: '1px solid #e2e8f0', background: '#fff', outline: 'none' }}
+                          />
+                          <button 
+                            type="button"
+                            onClick={() => {
+                              const next = (formData[field.key] || []).filter((_, i) => i !== idx);
+                              updateFormData({ ...formData, [field.key]: next });
+                            }}
+                            style={{ 
+                              display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                              width: '40px', height: '40px', borderRadius: '8px', 
+                              background: '#fef2f2', color: '#ef4444', border: '1px solid #fee2e2', cursor: 'pointer' 
+                            }}
+                          >
+                            <LucideIcons.Trash2 size={16} />
+                          </button>
+                        </div>
+                      );
+                    })}
                     <button 
                       type="button" 
                       onClick={() => {

@@ -4,26 +4,26 @@ import GenericManager from '../../../components/Admin/GenericManager';
 export default function NavbarManager() {
   const fields = [
     {
-      "key": "brand_name",
-      "label": "Brand / Studio Logo Text (e.g. VELOUR STUDIO)",
+      "key": "logo_text",
+      "label": "Brand / Studio Logo Text (e.g. Velour)",
       "type": "text"
     },
     {
-      "key": "announcement",
-      "label": "Top bar Ribbon Announcement (e.g. 20% OFF FIRST BOOKING)",
+      "key": "logo_accent",
+      "label": "Logo Accent Character (e.g. .)",
       "type": "text"
     },
     {
-      "key": "contact_phone",
-      "label": "Fast Book Header Phone Link (e.g. +1 (555) 782-9989)",
+      "key": "cta_text",
+      "label": "Book Now Button Text (e.g. Book Now)",
       "type": "text"
     }
   ];
 
   return (
     <GenericManager 
-      title="Navbar & Announcement Settings" 
-      tableKey="navbar_settings" 
+      title="Navbar & Branding Settings" 
+      tableKey="navbar" 
       fields={fields} 
       isSingleRow={true}
     />

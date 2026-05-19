@@ -76,6 +76,24 @@ export default function Home() {
     .au{animation:up 0.65s ease both}
     .au1{animation-delay:.08s}.au2{animation-delay:.16s}.au3{animation-delay:.24s}.au4{animation-delay:.32s}
     @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 1.2fr 1.2fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 900px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+      }
+    }
+    @media (max-width: 600px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+    }
     @media(max-width:768px){section{padding:56px 0}.wrap{padding:0 18px}}
   `, [c]);
 

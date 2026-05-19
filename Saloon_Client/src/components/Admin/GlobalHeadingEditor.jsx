@@ -3,7 +3,7 @@ import { Settings, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { crudService } from '../../services/crud';
 import { useToast } from './ToastContext';
 
-const GlobalHeadingEditor = ({ slug, fieldMap = {} }) => {
+const GlobalHeadingEditor = ({ slug, defaultText = '', defaultTag = '', centered = false, fieldMap = {} }) => {
   const { showToast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -15,6 +15,9 @@ const GlobalHeadingEditor = ({ slug, fieldMap = {} }) => {
   const [desc, setDesc] = useState('');
   const [status, setStatus] = useState('Active');
 
+  const isAdmin = !!localStorage.getItem('admin_token') && window.location.pathname.includes('/admin');
+  const isPublicPath = !window.location.pathname.includes('/admin');
+
   // Configure safety-first configuration mapping
   const effectiveFieldMap = {
     tag: 'tag',
@@ -24,7 +27,6 @@ const GlobalHeadingEditor = ({ slug, fieldMap = {} }) => {
   };
 
   const loadData = async () => {
-    setLoading(true);
     try {
       const result = await crudService.getAll(`admin/${slug}`);
       const rows = Array.isArray(result) ? result : [];
@@ -51,10 +53,11 @@ const GlobalHeadingEditor = ({ slug, fieldMap = {} }) => {
   };
 
   useEffect(() => {
-    if (isOpen) {
-      loadData();
-    }
-  }, [isOpen, slug]);
+    loadData();
+    const handleUpdate = () => loadData();
+    window.addEventListener('api-data-updated', handleUpdate);
+    return () => window.removeEventListener('api-data-updated', handleUpdate);
+  }, [slug]);
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -86,40 +89,94 @@ const GlobalHeadingEditor = ({ slug, fieldMap = {} }) => {
     }
   };
 
-  return (
-    <div className="global-heading-editor-wrapper" style={{ marginBottom: '24px', width: '100%' }}>
-      <button 
-        type="button" 
-        className={`admin-btn ${isOpen ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
-        style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: '8px',
-          fontWeight: '700',
-          padding: '10px 20px',
-          borderRadius: '8px',
-          boxShadow: isOpen ? '0 4px 12px rgba(126, 200, 160, 0.2)' : '0 2px 4px rgba(0,0,0,0.03)',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          cursor: 'pointer',
-          border: isOpen ? '1px solid transparent' : '1px solid #e2e8f0'
-        }}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <Settings size={16} className={isOpen ? 'animate-spin' : ''} style={{ animationDuration: '4s' }} />
-        <span>Global Heading</span>
-        {isOpen ? <ChevronUp size={14} style={{ marginLeft: '4px' }} /> : <ChevronDown size={14} style={{ marginLeft: '4px' }} />}
-      </button>
+  // Render dynamic header elements
+  const headingTag = tag || defaultTag;
+  const headingTitle = title || defaultText;
 
-      {isOpen && (
+  return (
+    <div 
+      className="global-heading-display-and-editor" 
+      style={{ 
+        width: '100%', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: centered ? 'center' : 'flex-start',
+        textAlign: centered ? 'center' : 'left'
+      }}
+    >
+      {/* 1. Dynamic Tag / Badge */}
+      {isPublicPath && headingTag && (
+        <div className="label" style={{ marginBottom: '8px' }}>
+          {headingTag}
+        </div>
+      )}
+
+      {/* 2. Dynamic Main Title */}
+      {isPublicPath && headingTitle && (
+        <h2 className="h2" style={{ marginTop: '4px', marginBottom: '4px' }}>
+          {headingTitle}
+        </h2>
+      )}
+
+      {/* 3. Dynamic Subtitle / Description */}
+      {isPublicPath && desc && (
+        <p 
+          className="body-sm" 
+          style={{ 
+            marginTop: '12px', 
+            maxWidth: '600px',
+            marginLeft: centered ? 'auto' : '0',
+            marginRight: centered ? 'auto' : '0',
+            marginBottom: '16px'
+          }}
+        >
+          {desc}
+        </p>
+      )}
+
+      {/* 4. Admin Settings Button (Only visible to logged-in admins) */}
+      {isAdmin && (
+        <div style={{ marginTop: '12px', marginBottom: '16px', display: 'inline-block' }}>
+          <button 
+            type="button" 
+            className={`admin-btn ${isOpen ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px',
+              fontWeight: '700',
+              padding: '6px 14px',
+              fontSize: '11px',
+              borderRadius: '8px',
+              boxShadow: isOpen ? '0 4px 12px rgba(126, 200, 160, 0.2)' : '0 2px 4px rgba(0,0,0,0.03)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              cursor: 'pointer',
+              border: isOpen ? '1px solid transparent' : '1px solid #e2e8f0'
+            }}
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <Settings size={13} className={isOpen ? 'animate-spin' : ''} style={{ animationDuration: '4s' }} />
+            <span>Global Heading Settings</span>
+            {isOpen ? <ChevronUp size={11} style={{ marginLeft: '4px' }} /> : <ChevronDown size={11} style={{ marginLeft: '4px' }} />}
+          </button>
+        </div>
+      )}
+
+      {/* 5. Admin Settings Panel dropdown */}
+      {isOpen && isAdmin && (
         <div 
           className="admin-card" 
           style={{ 
-            marginTop: '14px', 
+            marginTop: '8px', 
             padding: '20px',
             background: '#ffffff',
             border: '1.5px solid #e2e8f0',
             borderRadius: '12px',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)'
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)',
+            width: '100%',
+            maxWidth: '650px',
+            textAlign: 'left',
+            zIndex: 10
           }}
         >
           {loading ? (
@@ -135,8 +192,8 @@ const GlobalHeadingEditor = ({ slug, fieldMap = {} }) => {
               </h4>
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
-                <div className="admin-form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label className="admin-label" style={{ fontSize: '12px', fontWeight: '600', color: '#475569' }}>Section Tag / Badge Text</label>
+                <div className="admin-form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '0px' }}>
+                  <label className="admin-label" style={{ fontSize: '12px', fontWeight: '600', color: '#475569', marginBottom: '4px' }}>Section Tag / Badge Text</label>
                   <input 
                     type="text" 
                     className="admin-input" 
@@ -146,8 +203,8 @@ const GlobalHeadingEditor = ({ slug, fieldMap = {} }) => {
                     onChange={e => setTag(e.target.value)} 
                   />
                 </div>
-                <div className="admin-form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label className="admin-label" style={{ fontSize: '12px', fontWeight: '600', color: '#475569' }}>Main Heading Title</label>
+                <div className="admin-form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '0px' }}>
+                  <label className="admin-label" style={{ fontSize: '12px', fontWeight: '600', color: '#475569', marginBottom: '4px' }}>Main Heading Title</label>
                   <input 
                     type="text" 
                     className="admin-input" 
@@ -158,8 +215,8 @@ const GlobalHeadingEditor = ({ slug, fieldMap = {} }) => {
                     required 
                   />
                 </div>
-                <div className="admin-form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label className="admin-label" style={{ fontSize: '12px', fontWeight: '600', color: '#475569' }}>Supporting Description</label>
+                <div className="admin-form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '0px' }}>
+                  <label className="admin-label" style={{ fontSize: '12px', fontWeight: '600', color: '#475569', marginBottom: '4px' }}>Supporting Description</label>
                   <textarea 
                     className="admin-input" 
                     style={{ padding: '10px 14px', fontSize: '13px', minHeight: '75px', maxHeight: '150px', resize: 'vertical', border: '1px solid #cbd5e1', borderRadius: '6px' }}
@@ -169,8 +226,8 @@ const GlobalHeadingEditor = ({ slug, fieldMap = {} }) => {
                     rows={3}
                   />
                 </div>
-                <div className="admin-form-group" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
-                  <label className="admin-label" style={{ fontSize: '12px', fontWeight: '600', color: '#475569' }}>Section Active Status</label>
+                <div className="admin-form-group" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px', marginBottom: '0px' }}>
+                  <label className="admin-label" style={{ fontSize: '12px', fontWeight: '600', color: '#475569', marginBottom: '0px' }}>Section Active Status</label>
                   <div className="status-toggle-premium" onClick={() => setStatus(status === 'Active' ? 'Inactive' : 'Active')}>
                     <div className={`toggle-track ${status === 'Active' ? 'active' : ''}`}>
                       <div className="toggle-thumb"></div>

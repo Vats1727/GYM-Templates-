@@ -5,44 +5,30 @@ export default function ServicesManager() {
   const fields = [
     {
       "key": "category",
-      "label": "Service Category (e.g. Haircare, Makeup, Skincare, Nailcare)",
-      "type": "text"
+      "label": "Service Category Name",
+      "type": "select",
+      "options": ["Cuts & Styling", "Color & Texture", "Grooming", "Skin & Beauty"]
     },
     {
-      "key": "name",
-      "label": "Service Name (e.g. Balayage & Styling)",
-      "type": "text"
-    },
-    {
-      "key": "price",
-      "label": "Service Price (e.g. $180+)",
-      "type": "text"
-    },
-    {
-      "key": "duration",
-      "label": "Duration (e.g. 120 min)",
-      "type": "text"
-    },
-    {
-      "key": "desc",
-      "label": "Description of the Service",
-      "type": "textarea"
-    },
-    {
-      "key": "popular",
-      "label": "Popular / Recommended Service?",
-      "type": "boolean"
+      "key": "icon",
+      "label": "Category Icon",
+      "type": "icon"
     },
     {
       "key": "features",
-      "label": "Service Features & Inclusions (Add item list)",
-      "type": "repeater"
+      "label": "Service Items",
+      "type": "object_list",
+      "schema": [
+        { "key": "n", "label": "Service Name (e.g. Signature Cut)", "type": "text", "placeholder": "Signature Cut" },
+        { "key": "p", "label": "Service Price (e.g. ₹1,500)", "type": "text", "placeholder": "₹1,500" },
+        { "key": "d", "label": "Description (e.g. Shampoo, precision cut...)", "type": "text", "placeholder": "Shampoo, precision cut, blow-dry" }
+      ]
     }
   ];
 
   return (
     <GenericManager 
-      title="Services Manager" 
+      title="Services & Pricing Category Manager" 
       tableKey="services" 
       headingSlug="services_heading"
       fields={fields} 

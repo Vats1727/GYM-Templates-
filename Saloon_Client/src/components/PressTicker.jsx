@@ -9,7 +9,7 @@ export default function PressTicker({ c }) {
   
   // Transform or fallback
   const items = tickerItems && tickerItems.length > 0 
-    ? tickerItems.map(item => ({ title: item.text, body: "Special Mention", icon: item.icon || "Trophy" }))
+    ? tickerItems.map(item => ({ title: item.text, body: item.body || "Special Mention", icon: item.icon || "Trophy" }))
     : AWARDS.map(a => ({ title: a.title, body: `${a.body} · ${a.year}`, icon: "Trophy" }));
 
   return (

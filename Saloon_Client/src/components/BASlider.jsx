@@ -38,17 +38,17 @@ export default function BASlider({ work, theme }) {
         onTouchStart={(e) => { setDragging(true); move(e.touches[0].clientX); }}
       >
         {/* Before Slider layer */}
-        <div style={{ 
-          position: "absolute", 
-          inset: 0, 
-          background: beforeImg ? `url(${beforeImg})` : work.beforeBg, 
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          background: beforeImg ? `url(${beforeImg})` : work.beforeBg,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          display: "flex", 
-          flexDirection: "column", 
-          alignItems: "center", 
-          justifyContent: "center", 
-          gap: 8 
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8
         }}>
           {!beforeImg && (
             <>
@@ -60,18 +60,18 @@ export default function BASlider({ work, theme }) {
         </div>
 
         {/* After Slider layer */}
-        <div style={{ 
-          position: "absolute", 
-          inset: 0, 
-          clipPath: `inset(0 0 0 ${pos}%)`, 
-          background: afterImg ? `url(${afterImg})` : work.afterBg, 
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          clipPath: `inset(0 0 0 ${pos}%)`,
+          background: afterImg ? `url(${afterImg})` : work.afterBg,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          display: "flex", 
-          flexDirection: "column", 
-          alignItems: "center", 
-          justifyContent: "center", 
-          gap: 8 
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8
         }}>
           {!afterImg && (
             <>

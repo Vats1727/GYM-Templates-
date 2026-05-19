@@ -10,58 +10,83 @@ export default function HeroSectionManager() {
     },
     {
       "key": "title_line1",
-      "label": "Title Line 1 (e.g. BEAUTY & ELEGANCE)",
+      "label": "Title Line 1 (e.g. Beauty is)",
       "type": "text"
     },
     {
       "key": "title_line2",
-      "label": "Title Line 2 (e.g. REDEFINED)",
+      "label": "Title Line 2 (e.g. a practice,)",
       "type": "text"
+    },
+    {
+      "key": "title_line3",
+      "label": "Title Line 3 (e.g. not an event.)",
+      "type": "text"
+    },
+    {
+      "key": "subtitle",
+      "label": "Hero Description Text",
+      "type": "textarea"
     },
     {
       "key": "btn_text",
-      "label": "Primary Booking Button (e.g. Reserve Spot)",
+      "label": "Primary Button Text (e.g. Reserve Your Visit →)",
       "type": "text"
     },
     {
-      "key": "btn_subtext",
-      "label": "Button Small Helper (e.g. takes 2 minutes)",
+      "key": "btn_link",
+      "label": "Primary Button Target (e.g. book)",
       "type": "text"
     },
     {
-      "key": "stat1_val",
-      "label": "Stat 1 Value (e.g. 12k+)",
+      "key": "btn2_text",
+      "label": "Secondary Button Text (e.g. See Transformations)",
       "type": "text"
     },
     {
-      "key": "stat1_lbl",
-      "label": "Stat 1 Label (e.g. Happy Clients)",
-      "type": "text"
-    },
-    {
-      "key": "stat2_val",
-      "label": "Stat 2 Value (e.g. 99.8%)",
-      "type": "text"
-    },
-    {
-      "key": "stat2_lbl",
-      "label": "Stat 2 Label (e.g. Satisfaction)",
-      "type": "text"
-    },
-    {
-      "key": "stat3_val",
-      "label": "Stat 3 Value (e.g. 15+)",
-      "type": "text"
-    },
-    {
-      "key": "stat3_lbl",
-      "label": "Stat 3 Label (e.g. Top Stylists)",
+      "key": "btn2_link",
+      "label": "Secondary Button Target (e.g. work)",
       "type": "text"
     },
     {
       "key": "image",
       "label": "Hero Background Image",
       "type": "image"
+    },
+    {
+      "key": "rating_stars",
+      "label": "Press Strip Rating (1-5 Stars)",
+      "type": "number"
+    },
+    {
+      "key": "featured_in",
+      "label": "Press Strip Featured Text",
+      "type": "text"
+    },
+    {
+      "key": "award_title",
+      "label": "Showcase Award Title",
+      "type": "text"
+    },
+    {
+      "key": "award_subtitle",
+      "label": "Showcase Award Subtitle",
+      "type": "text"
+    },
+    {
+      "key": "quick_book_title",
+      "label": "Quick Book Card Title",
+      "type": "text"
+    },
+    {
+      "key": "quick_book_subtitle",
+      "label": "Quick Book Card Subtitle",
+      "type": "text"
+    },
+    {
+      "key": "quick_book_btn_text",
+      "label": "Quick Book Button Text",
+      "type": "text"
     }
   ];
 

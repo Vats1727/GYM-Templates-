@@ -9,9 +9,13 @@ export default function BookingManager() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [width, setWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     loadBookings();
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const loadBookings = async () => {
@@ -70,9 +74,10 @@ export default function BookingManager() {
   const pending = bookings.filter(b => (b.status || 'Pending') === 'Pending').length;
   const confirmed = bookings.filter(b => b.status === 'Confirmed').length;
   const completed = bookings.filter(b => b.status === 'Completed').length;
+  const isMobile = width <= 1024;
 
   return (
-    <div style={{ padding: '32px', color: '#1e293b', minWidth: '100%' }}>
+    <div style={{ padding: '32px', color: '#1e293b', width: '100%', boxSizing: 'border-box' }}>
       {/* 1. Header Banner */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
         <div>
@@ -160,16 +165,138 @@ export default function BookingManager() {
             <ShieldAlert size={40} style={{ margin: '0 auto 16px', color: '#cbd5e1' }} />
             <div style={{ fontSize: '15px', fontWeight: '600' }}>No booking records match your filter criteria</div>
           </div>
+        ) : isMobile ? (
+          /* Mobile/Tablet Card-Based Layout */
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', padding: '20px', background: '#f8fafc' }}>
+            {filteredBookings.map((b) => {
+              const status = b.status || 'Pending';
+              
+              let badgeStyle = { background: '#fef3c7', color: '#d97706' }; // Pending amber
+              if (status === 'Confirmed') badgeStyle = { background: '#e2f5ec', color: '#7EC8A0' }; // Confirmed green
+              if (status === 'Completed') badgeStyle = { background: '#dcfce7', color: '#166534' }; // Completed green
+              if (status === 'Cancelled') badgeStyle = { background: '#fee2e2', color: '#991b1b' }; // Cancelled red
+
+              return (
+                <div key={b.id} style={{ 
+                  background: 'white', 
+                  borderRadius: '16px', 
+                  border: '1px solid #e2e8f0', 
+                  padding: '20px', 
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.015)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '14px',
+                  position: 'relative'
+                }}>
+                  {/* Card Header */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div>
+                      <div style={{ fontWeight: '800', color: '#0f172a', fontSize: '15.5px' }}>{b.name || 'Anonymous Client'}</div>
+                      <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px', wordBreak: 'break-all' }}>{b.phone || '-'} • {b.email || '-'}</div>
+                    </div>
+                    
+                    {/* Delete Icon */}
+                    <button 
+                      onClick={() => handleDelete(b.id)}
+                      style={{
+                        background: 'transparent', border: 'none', color: '#ef4444',
+                        cursor: 'pointer', padding: '6px', borderRadius: '8px',
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                        transition: '0.2s', flexShrink: 0
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#fef2f2'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                      title="Delete record permanently"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
+
+                  {/* Card Body Info */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13px', borderTop: '1px solid #f1f5f9', paddingTop: '12px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: '#64748b', fontWeight: '500' }}>Selected Stylist</span>
+                      <span style={{ fontWeight: '600', color: '#334155' }}>{b.stylist || 'First Available'}</span>
+                    </div>
+                    
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: '#64748b', fontWeight: '500' }}>Service</span>
+                      <span style={{ background: '#f1f5f9', color: '#475569', padding: '2px 8px', borderRadius: '6px', fontSize: '12px', fontWeight: '600' }}>
+                        {b.service || 'General Styling Session'}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: '#64748b', fontWeight: '500' }}>Schedule</span>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontWeight: '700', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end' }}>
+                          <Calendar size={12} style={{ color: '#7EC8A0' }} />
+                          {b.date || 'To be scheduled'}
+                        </div>
+                        <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end' }}>
+                          <Clock size={11} />
+                          {b.time || '-'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Custom Note/Gift Card Box */}
+                  {b.note && (
+                    <div style={{ 
+                      fontSize: '11px', 
+                      color: b.phone === 'GIFT CARD' ? '#8b5cf6' : '#64748b', 
+                      background: b.phone === 'GIFT CARD' ? '#f5f3ff' : '#f8fafc', 
+                      border: `1px solid ${b.phone === 'GIFT CARD' ? '#e9d5ff' : '#e2e8f0'}`,
+                      padding: '8px 12px', 
+                      borderRadius: '8px', 
+                      wordBreak: 'break-word',
+                      lineHeight: '1.4'
+                    }}>
+                      <strong>Details:</strong> {b.note}
+                    </div>
+                  )}
+
+                  {/* Status Dropdown */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #f1f5f9', paddingTop: '12px', marginTop: 'auto' }}>
+                    <span style={{ fontSize: '12px', fontWeight: '700', color: '#64748b' }}>Status</span>
+                    <select 
+                      value={status} 
+                      onChange={(e) => handleUpdateStatus(b.id, e.target.value)}
+                      style={{
+                        background: badgeStyle.background,
+                        color: badgeStyle.color,
+                        border: 'none',
+                        padding: '6px 12px',
+                        borderRadius: '20px',
+                        fontSize: '11.5px',
+                        fontWeight: '800',
+                        cursor: 'pointer',
+                        outline: 'none',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                      }}
+                    >
+                      <option value="Pending">Pending Approval</option>
+                      <option value="Confirmed">Confirmed</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         ) : (
+          /* Desktop Layout - Classic Table */
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
               <tr style={{ background: '#f8fafc', borderBottom: '1px solid #cbd5e1' }}>
-                <th style={{ padding: '16px 24px', fontSize: '12px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase' }}>Client Details</th>
-                <th style={{ padding: '16px 24px', fontSize: '12px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase' }}>Selected Stylist</th>
-                <th style={{ padding: '16px 24px', fontSize: '12px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase' }}>Service Details</th>
-                <th style={{ padding: '16px 24px', fontSize: '12px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase' }}>Date & Schedule</th>
-                <th style={{ padding: '16px 24px', fontSize: '12px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase' }}>Verification Status</th>
-                <th style={{ padding: '16px 24px', fontSize: '12px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
+                <th style={{ padding: '12px 16px', fontSize: '10.5px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Client Details</th>
+                <th style={{ padding: '12px 16px', fontSize: '10.5px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Selected Stylist</th>
+                <th style={{ padding: '12px 16px', fontSize: '10.5px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Service Details</th>
+                <th style={{ padding: '12px 16px', fontSize: '10.5px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date & Schedule</th>
+                <th style={{ padding: '12px 16px', fontSize: '10.5px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Verification Status</th>
+                <th style={{ padding: '12px 16px', fontSize: '10.5px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -183,34 +310,51 @@ export default function BookingManager() {
 
                 return (
                   <tr key={b.id} style={{ borderBottom: '1px solid #f1f5f9', transition: '0.2s' }} className="booking-table-row">
-                    <td style={{ padding: '16px 24px' }}>
-                      <div style={{ fontWeight: '800', color: '#0f172a', fontSize: '15px' }}>{b.name || 'Anonymous Client'}</div>
-                      <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>{b.phone || '-'} • {b.email || '-'}</div>
+                    <td style={{ padding: '10px 16px' }}>
+                      <div style={{ fontWeight: '800', color: '#0f172a', fontSize: '13.5px' }}>{b.name || 'Anonymous Client'}</div>
+                      <div style={{ fontSize: '11px', color: '#64748b', marginTop: '1.5px' }}>{b.phone || '-'} • {b.email || '-'}</div>
+                      {b.note && (
+                        <div style={{ 
+                          fontSize: '10px', 
+                          color: b.phone === 'GIFT CARD' ? '#8b5cf6' : '#64748b', 
+                          background: b.phone === 'GIFT CARD' ? '#f5f3ff' : '#f8fafc', 
+                          border: `1px solid ${b.phone === 'GIFT CARD' ? '#e9d5ff' : '#e2e8f0'}`,
+                          padding: '3px 6px', 
+                          borderRadius: '4px', 
+                          marginTop: '4px', 
+                          display: 'inline-block',
+                          maxWidth: '280px',
+                          wordBreak: 'break-word',
+                          lineHeight: '1.3'
+                        }}>
+                          <strong>Details:</strong> {b.note}
+                        </div>
+                      )}
                     </td>
-                    <td style={{ padding: '16px 24px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#e2f5ec', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', color: '#7EC8A0', fontWeight: '800' }}>
+                    <td style={{ padding: '10px 16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#e2f5ec', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9.5px', color: '#7EC8A0', fontWeight: '800' }}>
                           {b.stylist ? b.stylist.substring(0, 2).toUpperCase() : 'ST'}
                         </div>
-                        <span style={{ fontWeight: '600', color: '#334155' }}>{b.stylist || 'First Available'}</span>
+                        <span style={{ fontWeight: '600', color: '#334155', fontSize: '12.5px' }}>{b.stylist || 'First Available'}</span>
                       </div>
                     </td>
-                    <td style={{ padding: '16px 24px' }}>
-                      <span style={{ background: '#f1f5f9', color: '#475569', padding: '4px 8px', borderRadius: '6px', fontSize: '13px', fontWeight: '600' }}>
+                    <td style={{ padding: '10px 16px' }}>
+                      <span style={{ background: '#f1f5f9', color: '#475569', padding: '3px 6px', borderRadius: '5px', fontSize: '11.5px', fontWeight: '600' }}>
                         {b.service || 'General Styling Session'}
                       </span>
                     </td>
-                    <td style={{ padding: '16px 24px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '700', color: '#0f172a', fontSize: '13.5px' }}>
-                        <Calendar size={13} style={{ color: '#7EC8A0' }} />
+                    <td style={{ padding: '10px 16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '750', color: '#0f172a', fontSize: '12.5px' }}>
+                        <Calendar size={12} style={{ color: '#7EC8A0' }} />
                         {b.date || 'To be scheduled'}
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#64748b', marginTop: '4px' }}>
-                        <Clock size={12} />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#64748b', marginTop: '2.5px' }}>
+                        <Clock size={11} />
                         {b.time || '-'}
                       </div>
                     </td>
-                    <td style={{ padding: '16px 24px' }}>
+                    <td style={{ padding: '10px 16px' }}>
                       <select 
                         value={status} 
                         onChange={(e) => handleUpdateStatus(b.id, e.target.value)}
@@ -218,9 +362,9 @@ export default function BookingManager() {
                           background: badgeStyle.background,
                           color: badgeStyle.color,
                           border: 'none',
-                          padding: '6px 12px',
+                          padding: '4px 10px',
                           borderRadius: '20px',
-                          fontSize: '11.5px',
+                          fontSize: '11px',
                           fontWeight: '800',
                           cursor: 'pointer',
                           outline: 'none',
@@ -233,12 +377,12 @@ export default function BookingManager() {
                         <option value="Cancelled">Cancelled</option>
                       </select>
                     </td>
-                    <td style={{ padding: '16px 24px', textAlign: 'right' }}>
+                    <td style={{ padding: '10px 16px', textAlign: 'right' }}>
                       <button 
                         onClick={() => handleDelete(b.id)}
                         style={{
                           background: 'transparent', border: 'none', color: '#ef4444',
-                          cursor: 'pointer', padding: '6px', borderRadius: '8px',
+                          cursor: 'pointer', padding: '4px', borderRadius: '6px',
                           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                           transition: '0.2s'
                         }}
@@ -246,7 +390,7 @@ export default function BookingManager() {
                         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                         title="Delete record permanently"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={14} />
                       </button>
                     </td>
                   </tr>

@@ -24,8 +24,7 @@ export default function Reviews({ c, go }) {
       <div className="wrap">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48, flexWrap: "wrap", gap: 20 }}>
           <div>
-            <div className="label">Client Stories</div>
-            <GlobalHeadingEditor slug="reviews_heading" defaultText="What Clients Say" />
+            <GlobalHeadingEditor slug="reviews_heading" defaultText="What Clients Say" defaultTag="Client Stories" />
           </div>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
             <div style={{ textAlign: "right" }}>

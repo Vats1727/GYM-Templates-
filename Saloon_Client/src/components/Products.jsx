@@ -25,8 +25,7 @@ export default function Products({ c, go }) {
       <div className="wrap">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 36, flexWrap: "wrap", gap: 16 }}>
           <div>
-            <div className="label">In-Studio Shop</div>
-            <GlobalHeadingEditor slug="products_heading" defaultText="Professional Products" />
+            <GlobalHeadingEditor slug="products_heading" defaultText="Professional Products" defaultTag="In-Studio Shop" />
           </div>
           <button className="btn btn-o" style={{ fontSize: 11 }}>View All Products →</button>
         </div>

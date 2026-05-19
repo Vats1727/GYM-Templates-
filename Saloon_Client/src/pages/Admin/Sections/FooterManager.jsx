@@ -4,38 +4,63 @@ import GenericManager from '../../../components/Admin/GenericManager';
 export default function FooterManager() {
   const fields = [
     {
-      "key": "about_text",
-      "label": "About Studio Description (e.g. Premium boutique hair & nail styling space designed to elevate your personal style.)",
+      "key": "logo_text",
+      "label": "Brand / Studio Logo Text (e.g. Velour)",
+      "type": "text"
+    },
+    {
+      "key": "logo_accent",
+      "label": "Logo Accent Character (e.g. .)",
+      "type": "text"
+    },
+    {
+      "key": "description",
+      "label": "About Studio Description / Tagline",
       "type": "textarea"
     },
     {
-      "key": "phone",
-      "label": "Contact Phone Link",
+      "key": "address_line1",
+      "label": "Address Line 1 (e.g. 123 Law Garden Road)",
       "type": "text"
     },
     {
-      "key": "email",
-      "label": "Contact Email Address",
+      "key": "address_line2",
+      "label": "Address Line 2 (e.g. Ahmedabad, Gujarat 380009)",
       "type": "text"
     },
     {
-      "key": "address",
-      "label": "Studio Street Address Location",
+      "key": "hours_line1",
+      "label": "Timing Line 1 (e.g. Mon–Sat: 10am – 8pm)",
       "type": "text"
     },
     {
-      "key": "hours_weekdays",
-      "label": "Weekday Hours (e.g. Mon - Fri: 9:00 AM - 8:00 PM)",
+      "key": "hours_line2",
+      "label": "Timing Line 2 (e.g. Sunday: 11am – 6pm)",
       "type": "text"
     },
     {
-      "key": "hours_weekends",
-      "label": "Weekend Hours (e.g. Sat - Sun: 10:00 AM - 6:00 PM)",
+      "key": "phone_number",
+      "label": "Contact Phone Number (e.g. +91 79 555 0199)",
       "type": "text"
     },
     {
-      "key": "copyright",
-      "label": "Footer Copyright Note",
+      "key": "fb_link",
+      "label": "Facebook Page URL",
+      "type": "text"
+    },
+    {
+      "key": "ig_link",
+      "label": "Instagram Page URL",
+      "type": "text"
+    },
+    {
+      "key": "tw_link",
+      "label": "Twitter Profile URL",
+      "type": "text"
+    },
+    {
+      "key": "yt_link",
+      "label": "YouTube Channel URL",
       "type": "text"
     }
   ];
@@ -43,7 +68,7 @@ export default function FooterManager() {
   return (
     <GenericManager 
       title="Footer Settings Manager" 
-      tableKey="footer_settings" 
+      tableKey="footer" 
       fields={fields} 
       isSingleRow={true}
     />

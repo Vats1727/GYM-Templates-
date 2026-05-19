@@ -39,10 +39,8 @@ export default function Rewards({ theme, c, go }) {
       <div className="wrap">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 64, alignItems: "start" }}>
           <div>
-            <div className="label">Member Benefits</div>
-            <GlobalHeadingEditor slug="rewards_heading" defaultText="Velour Loyalty Programme" />
+            <GlobalHeadingEditor slug="rewards_heading" defaultText="Velour Loyalty Programme" defaultTag="Member Benefits" />
             <div className="rule" />
-            <p className="body-sm" style={{ marginBottom: 32 }}>Earn points on every visit, referral, and product purchase. Redeem for free services, upgrades, and exclusive experiences.</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 32 }}>
               {benefits.map((b) => (
                 <div key={b.title} style={{ display: "flex", gap: 14, padding: "14px 18px", background: c.bgCard, border: `1px solid ${c.border}`, borderRadius: 4, alignItems: "center" }}>

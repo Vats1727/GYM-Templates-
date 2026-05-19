@@ -8,7 +8,7 @@ export default function useFetchData(endpoint, defaultData = null) {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_API_URL || '/gym_dev/gym_dev/server/public';
+        const baseUrl = import.meta.env.VITE_API_URL || '/GYM-Templates-/Saloon_Server/public';
         const res = await axios.get(`${baseUrl}/${endpoint}`);
         setData(res.data);
       } catch (err) {

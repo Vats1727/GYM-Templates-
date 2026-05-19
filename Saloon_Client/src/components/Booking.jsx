@@ -10,16 +10,31 @@ export default function Booking({ theme, c, bk, setBk, bkStep, setBkStep, booked
   // Fetch active services and team members dynamically to populate select drop-downs
   const { data: dbServices } = useFetchData('services', []);
   const { data: dbStaff } = useFetchData('team', []);
+  const { data: dbFooter } = useFetchData('footer/active', []);
+
+  const contactData = dbFooter && dbFooter.length > 0 ? {
+    location: `${dbFooter[0].address_line1}, ${dbFooter[0].address_line2}`,
+    hours: `${dbFooter[0].hours_line1}  ·  ${dbFooter[0].hours_line2}`,
+    phone: dbFooter[0].phone_number || "+91 98765 43210",
+    email: dbFooter[0].email || "hello@velourstudio.in",
+    parking: "Free client parking behind the building"
+  } : {
+    location: "23 Law Garden Road, Ellisbridge, Ahmedabad 380006",
+    hours: "Tue–Sat 10am–8pm  ·  Sun 11am–6pm  ·  Mon Closed",
+    phone: "+91 98765 43210",
+    email: "hello@velourstudio.in",
+    parking: "Free client parking behind the building"
+  };
 
   // Map categories and items
   const dynamicServicesList = React.useMemo(() => {
     if (!dbServices || dbServices.length === 0) {
       return SERVICES.flatMap((cat) => cat.items.map((item) => ({ name: item.n, price: item.p })));
     }
-    return dbServices.map(item => ({
-      name: item.name,
-      price: item.price
-    }));
+    return dbServices.map((item) => ({
+      name: item.name || '',
+      price: item.price || ''
+    })).filter((s) => s.name);
   }, [dbServices]);
 
   const dynamicStaffList = React.useMemo(() => {
@@ -74,11 +89,11 @@ export default function Booking({ theme, c, bk, setBk, bkStep, setBkStep, booked
             <div className="rule" />
             <p className="body-sm" style={{ marginBottom: 36 }}>Select your service, choose your artist, and secure your time. Same-day slots available. No deposit required for first visit.</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-              {[[<MapPin size={17} />, "Location", "23 Law Garden Road, Ellisbridge, Ahmedabad 380006"],
-                [<Clock size={17} />, "Hours", "Tue–Sat 10am–8pm  ·  Sun 11am–6pm  ·  Mon Closed"],
-                [<Phone size={17} />, "Call / WhatsApp", "+91 98765 43210"],
-                [<Mail size={17} />, "Email", "hello@velourstudio.in"],
-                [<Car size={17} />, "Parking", "Free client parking behind the building"]].map(([ico, lbl, val]) => (
+              {[[<MapPin size={17} />, "Location", contactData.location],
+                [<Clock size={17} />, "Hours", contactData.hours],
+                [<Phone size={17} />, "Call / WhatsApp", contactData.phone],
+                [<Mail size={17} />, "Email", contactData.email],
+                [<Car size={17} />, "Parking", contactData.parking]].map(([ico, lbl, val]) => (
                 <div key={lbl} style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div style={{ width: 38, height: 38, borderRadius: 3, background: c.bgCard, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, flexShrink: 0, color: c.accent }}>{ico}</div>
                   <div><div style={{ fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase", color: c.accent, marginBottom: 3 }}>{lbl}</div><div style={{ fontSize: 13, color: c.textMuted, lineHeight: 1.5 }}>{val}</div></div>

@@ -7,7 +7,7 @@ export default defineConfig({
   base: './',
   server: {
     proxy: {
-      '/gym_dev/gym_dev/server/public': {
+      '/GYM-Templates-/Saloon_Server/public': {
         target: 'http://localhost',
         changeOrigin: true,
       }

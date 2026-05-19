@@ -48,8 +48,7 @@ export default function Team({ c, bk, setBk, go }) {
       <div className="wrap">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48, flexWrap: "wrap", gap: 20 }}>
           <div>
-            <div className="label">The Artists</div>
-            <GlobalHeadingEditor slug="team_heading" defaultText="Meet Your Stylists" />
+            <GlobalHeadingEditor slug="team_heading" defaultText="Meet Your Stylists" defaultTag="The Artists" />
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             {[["all", "All"], ["barber", "Barbers"], ["beauty", "Beauticians"]].map(([v, l]) => (
