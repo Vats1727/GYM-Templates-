@@ -1,4 +1,5 @@
 import React from 'react';
+import { GraduationCap, Award, Globe } from 'lucide-react';
 
 export default function About() {
   return (
@@ -40,21 +41,21 @@ export default function About() {
           </p>
           <ul className="qual-list">
             <li className="qual-item">
-              <span className="qual-icon">🎓</span>
+              <span className="qual-icon" style={{ color: 'var(--accent)', display: 'inline-flex' }}><GraduationCap size={22} /></span>
               <div className="qual-text">
                 <strong>BHMS — Bachelor of Homoeopathic Medicine & Surgery</strong>
                 <span>National University of Medical Sciences, Rawalpindi — 2011</span>
               </div>
             </li>
             <li className="qual-item">
-              <span className="qual-icon">🩸</span>
+              <span className="qual-icon" style={{ color: 'var(--accent)', display: 'inline-flex' }}><Award size={22} /></span>
               <div className="qual-text">
                 <strong>Certified Hijama (Wet Cupping) Practitioner</strong>
                 <span>International Hijama Institute — 2015</span>
               </div>
             </li>
             <li className="qual-item">
-              <span className="qual-icon">🌍</span>
+              <span className="qual-icon" style={{ color: 'var(--accent)', display: 'inline-flex' }}><Globe size={22} /></span>
               <div className="qual-text">
                 <strong>Treating Patients Globally Since 2019</strong>
                 <span>Pakistan · UAE · UK · Canada · USA</span>

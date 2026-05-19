@@ -1,4 +1,5 @@
 import React from 'react';
+import { Calendar, Leaf, CheckCircle } from 'lucide-react';
 
 export default function Hero() {
   const handleScrollTo = (id) => {
@@ -35,8 +36,8 @@ export default function Hero() {
             </div>
           </div>
           <div className="hero-btns">
-            <button className="btn-primary" onClick={() => handleScrollTo('booking')}>
-              📅 Book Free Consultation
+            <button className="btn-primary" style={{ gap: '8px' }} onClick={() => handleScrollTo('booking')}>
+              <Calendar size={18} /> Book Free Consultation
             </button>
             <button className="btn-secondary" onClick={() => handleScrollTo('success')}>
               View Case Studies
@@ -47,14 +48,14 @@ export default function Hero() {
         <div className="hero-visual">
           {/* Floating badges */}
           <div className="badge-float badge1">
-            <span className="badge-icon">🌿</span>
+            <span className="badge-icon" style={{ color: 'var(--accent)', display: 'inline-flex' }}><Leaf size={20} /></span>
             <div>
               <div style={{ fontSize: '0.7rem', color: 'var(--text3)' }}>Certified in</div>
               <div style={{ fontSize: '0.82rem' }}>Homoeopathy</div>
             </div>
           </div>
           <div className="badge-float badge2">
-            <span className="badge-icon">✅</span>
+            <span className="badge-icon" style={{ color: 'var(--accent)', display: 'inline-flex' }}><CheckCircle size={20} /></span>
             <div>
               <div style={{ fontSize: '0.7rem', color: 'var(--text3)' }}>Next slot</div>
               <div style={{ fontSize: '0.82rem' }}>Today 4:00 PM</div>

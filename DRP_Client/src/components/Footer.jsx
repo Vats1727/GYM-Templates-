@@ -1,4 +1,5 @@
 import React from 'react';
+import { Mail, MessageSquare, MapPin, Clock } from 'lucide-react';
 
 export default function Footer() {
   const handleScrollTo = (id) => {
@@ -119,16 +120,16 @@ export default function Footer() {
         <div className="footer-col">
           <h4>Contact</h4>
           <ul>
-            <li><a href="mailto:dr.aisha@healnaturally.com">📧 dr.aisha@healnaturally.com</a></li>
-            <li><a href="https://wa.me/+923001234567" target="_blank" rel="noopener noreferrer">💬 WhatsApp +92 300 123 4567</a></li>
-            <li><a href="#home" onClick={(e) => { e.preventDefault(); handleScrollTo('home'); }}>📍 Online · Worldwide</a></li>
-            <li><a href="#home" onClick={(e) => { e.preventDefault(); handleScrollTo('home'); }}>🕐 9 AM – 9 PM PKT</a></li>
+            <li><a href="mailto:dr.aisha@healnaturally.com" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><Mail size={16} /> dr.aisha@healnaturally.com</a></li>
+            <li><a href="https://wa.me/+923001234567" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><MessageSquare size={16} /> WhatsApp +92 300 123 4567</a></li>
+            <li><a href="#home" onClick={(e) => { e.preventDefault(); handleScrollTo('home'); }} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><MapPin size={16} /> Online · Worldwide</a></li>
+            <li><a href="#home" onClick={(e) => { e.preventDefault(); handleScrollTo('home'); }} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><Clock size={16} /> 9 AM – 9 PM PKT</a></li>
           </ul>
         </div>
       </div>
       <div className="footer-bottom container">
         <span>© {new Date().getFullYear()} Dr. Aisha Malik. All rights reserved.</span>
-        <span>Designed with care for patient wellbeing 🌿</span>
+        <span>Designed with care for patient wellbeing</span>
       </div>
     </footer>
   );

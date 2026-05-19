@@ -1,4 +1,5 @@
 import React from 'react';
+import { Calendar, MessageSquare } from 'lucide-react';
 
 export default function Booking() {
   const handleBookClick = () => {
@@ -16,11 +17,11 @@ export default function Booking() {
           <h2>Ready to Begin Your Healing?</h2>
           <p>Book your free 20-minute introductory consultation today. No obligation, no pressure — just a conversation about your health.</p>
           <div className="booking-btns">
-            <button className="btn-white" onClick={handleBookClick}>
-              📅 Book Free Consultation
+            <button className="btn-white" style={{ gap: '8px' }} onClick={handleBookClick}>
+              <Calendar size={18} /> Book Free Consultation
             </button>
-            <button className="btn-outline-white" onClick={handleWhatsAppClick}>
-              💬 WhatsApp Us
+            <button className="btn-outline-white" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }} onClick={handleWhatsAppClick}>
+              <MessageSquare size={18} /> WhatsApp Us
             </button>
           </div>
           <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.55)', marginTop: '2rem' }}>
@@ -31,3 +32,4 @@ export default function Booking() {
     </section>
   );
 }
+

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Sun, Moon } from 'lucide-react';
 
 export default function Navbar() {
   const [theme, setTheme] = useState(document.documentElement.dataset.theme || 'light');
@@ -125,7 +126,7 @@ export default function Navbar() {
             title="Toggle Theme"
             onClick={handleToggleTheme}
           >
-            {theme === 'light' ? '🌙' : '☀️'}
+            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
           </button>
 
           <button

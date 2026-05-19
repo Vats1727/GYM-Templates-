@@ -5,37 +5,37 @@ export const PRESETS = {
 
 export const TREATMENTS = [
   {
-    icon: '🌿',
+    icon: 'Leaf',
     title: 'Classical Homoeopathy',
     desc: 'In-depth constitutional case analysis to select the most precise homoeopathic remedy for your mind-body type, targeting root causes rather than symptoms.',
     tags: ['Chronic Illness', 'Autoimmune', 'Anxiety', 'Allergies']
   },
   {
-    icon: '🩸',
+    icon: 'Droplet',
     title: 'Hijama Therapy (Wet Cupping)',
     desc: 'Sunnah-based detoxification technique for blood purification, pain relief, and immune boosting. Remote guidance with certified local therapist coordination.',
     tags: ['Migraines', 'Back Pain', 'Hypertension', 'Fatigue']
   },
   {
-    icon: '🌸',
+    icon: 'Sparkles',
     title: "Women's Health & Hormones",
     desc: 'Specialised protocols for PCOS, endometriosis, menstrual irregularities, menopause, and fertility support through natural homoeopathic treatment.',
     tags: ['PCOS', 'Menopause', 'Fertility', 'PMS']
   },
   {
-    icon: '🧠',
+    icon: 'Brain',
     title: 'Mental & Emotional Wellbeing',
     desc: 'Homoeopathic and holistic support for anxiety, depression, stress-induced disorders, and sleep dysfunction — gentle, non-addictive, effective.',
     tags: ['Anxiety', 'Depression', 'Insomnia', 'Burnout']
   },
   {
-    icon: '🧒',
+    icon: 'Baby',
     title: 'Paediatric Homoeopathy',
     desc: 'Safe, gentle treatment for children without side effects. Addressing recurrent infections, developmental concerns, skin issues, and digestive problems.',
     tags: ['Recurrent Fever', 'Eczema', 'Tonsillitis', 'Colic']
   },
   {
-    icon: '⚡',
+    icon: 'Activity',
     title: 'Chronic Disease Management',
     desc: 'Long-term holistic management of diabetes, thyroid disorders, arthritis, IBS, and other chronic conditions alongside conventional medicine.',
     tags: ['Diabetes Support', 'Thyroid', 'Arthritis', 'IBS']
