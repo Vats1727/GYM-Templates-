@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-font="impact">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marcus Reid — Elite Personal Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,600&family=Barlow:wght@300;400;500&family=Oswald:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   CSS VARIABLES — DARK (DEFAULT) & LIGHT THEME
+   ============================================================ */
+:root {
+  /* DARK */
+  --bg:       #0a0a0a;
+  --bg2:      #111111;
+  --bg3:      #181818;
+  --surface:  #1c1c1c;
+  --surface2: #242424;
+  --text:     #f5f5f5;
+  --text2:    #a8a8a8;
+  --text3:    #666;
+  --accent:   #e8ff00;       /* electric lime */
+  --accent2:  #c8dc00;
+  --accent-rgb: 232,255,0;
+  --red:      #ff3b3b;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(232,255,0,0.25);
+  --shadow:   rgba(0,0,0,0.5);
+  --shadow2:  rgba(0,0,0,0.8);
+  --card:     #161616;
+  --nav-bg:   rgba(10,10,10,0.92);
+  --hero-text: #f5f5f5;
+}
+
+[data-theme="light"] {
+  --bg:       #f0f0ec;
+  --bg2:      #e5e5e0;
+  --bg3:      #d8d8d2;
+  --surface:  #ffffff;
+  --surface2: #f5f5f0;
+  --text:     #0a0a0a;
+  --text2:    #444;
+  --text3:    #888;
+  --accent:   #2a2a00;
+  --accent2:  #444400;
+  --accent-rgb: 42,42,0;
+  --red:      #cc2222;
+  --border:   rgba(0,0,0,0.08);
+  --border2:  rgba(42,42,0,0.3);
+  --shadow:   rgba(0,0,0,0.1);
+  --shadow2:  rgba(0,0,0,0.2);
+  --card:     #ffffff;
+  --nav-bg:   rgba(240,240,236,0.94);
+  --hero-text: #0a0a0a;
+}
+
+/* ============================================================
+   FONT STACKS
+   ============================================================ */
+[data-font="impact"]  { --ff-head: 'Bebas Neue', 'Impact', sans-serif; --ff-sub: 'Barlow Condensed', sans-serif; --ff-body: 'Barlow', sans-serif; }
+[data-font="strong"]  { --ff-head: 'Oswald', sans-serif; --ff-sub: 'Oswald', sans-serif; --ff-body: 'Inter', sans-serif; }
+[data-font="clean"]   { --ff-head: 'Nunito', sans-serif; --ff-sub: 'Nunito', sans-serif; --ff-body: 'Nunito', sans-serif; }
+
+/* ============================================================
+   RESET
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:var(--ff-body);line-height:1.65;overflow-x:hidden;transition:background .4s,color .4s}
+h1,h2,h3,h4{font-family:var(--ff-head);line-height:1.05;letter-spacing:0.02em}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+
+/* ============================================================
+   NOISE TEXTURE OVERLAY
+   ============================================================ */
+body::before {
+  content:'';
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: .4;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+nav {
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:var(--nav-bg);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  height:68px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;
+}
+
+.nav-logo {
+  font-family:var(--ff-head);
+  font-size:1.55rem;
+  letter-spacing:0.04em;
+  color:var(--text);
+  display:flex;align-items:center;gap:10px;
+}
+.nav-logo .slash {color:var(--accent);}
+
+.nav-links{display:flex;gap:2.2rem;list-style:none}
+.nav-links a {
+  font-family:var(--ff-sub);
+  font-size:0.88rem;
+  font-weight:600;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--text2);
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--accent)}
+
+.nav-right{display:flex;align-items:center;gap:.75rem}
+
+.ctrl-btn{
+  width:38px;height:38px;border-radius:6px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text2);
+  cursor:pointer;font-size:.9rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;font-family:var(--ff-sub);font-weight:700;
+}
+.ctrl-btn:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+
+.font-menu{position:relative}
+.font-dropdown{
+  position:absolute;right:0;top:calc(100% + 8px);
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:5px;display:none;flex-direction:column;gap:2px;
+  box-shadow:0 12px 32px var(--shadow2);min-width:150px;
+}
+.font-dropdown.open{display:flex}
+.font-opt{
+  padding:8px 12px;border-radius:5px;cursor:pointer;
+  font-size:.8rem;font-family:var(--ff-sub);font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;
+  color:var(--text2);transition:background .15s;
+}
+.font-opt:hover{background:var(--surface)}
+.font-opt.active{background:var(--accent);color:var(--bg)}
+
+.btn-nav{
+  padding:10px 22px;
+  background:var(--accent);color:var(--bg);
+  border:none;border-radius:4px;
+  font-family:var(--ff-sub);font-size:.82rem;font-weight:800;
+  letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;
+}
+.btn-nav:hover{opacity:.85;transform:translateY(-1px)}
+
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer}
+.hamburger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+
+.mobile-menu{
+  position:fixed;top:68px;left:0;right:0;z-index:199;
+  background:var(--nav-bg);backdrop-filter:blur(20px);
+  padding:1.5rem 2.5rem;
+  display:none;flex-direction:column;gap:1.25rem;
+  border-bottom:1px solid var(--border);
+}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-family:var(--ff-sub);font-size:1.1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  min-height:100vh;
+  position:relative;
+  display:flex;align-items:flex-end;
+  padding:68px 0 0;
+  overflow:hidden;
+}
+
+/* Big angled background */
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    linear-gradient(160deg, rgba(232,255,0,0.08) 0%, transparent 45%),
+    linear-gradient(to bottom, var(--bg) 0%, var(--bg2) 100%);
+}
+
+/* Geometric grid lines */
+.hero-grid{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size:60px 60px;
+}
+[data-theme="light"] .hero-grid{
+  background-image:
+    linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px);
+}
+
+/* Big number watermark */
+.hero-watermark{
+  position:absolute;
+  right:-2%;bottom:-5%;z-index:0;
+  font-family:var(--ff-head);
+  font-size:clamp(18rem,28vw,34rem);
+  color:rgba(232,255,0,.04);
+  line-height:1;
+  pointer-events:none;
+  user-select:none;
+  letter-spacing:-0.05em;
+}
+[data-theme="light"] .hero-watermark{color:rgba(0,0,0,.05)}
+
+.hero-inner{
+  position:relative;z-index:1;
+  width:100%;max-width:1300px;margin:0 auto;
+  padding:0 2.5rem 5rem;
+  display:grid;grid-template-columns:1fr 420px;
+  gap:4rem;align-items:flex-end;
+}
+
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--ff-sub);font-size:.75rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1.25rem;
+}
+.hero-tag::before{
+  content:'';width:30px;height:2px;background:var(--accent);
+}
+
+.hero h1{
+  font-size:clamp(4.5rem,10vw,9.5rem);
+  color:var(--text);
+  line-height:0.92;
+  margin-bottom:1.5rem;
+}
+.hero h1 .outline{
+  -webkit-text-stroke:2px var(--text);
+  color:transparent;
+}
+[data-theme="light"] .hero h1 .outline{
+  -webkit-text-stroke:2px var(--text);
+  color:transparent;
+}
+.hero h1 .highlight{color:var(--accent)}
+
+.hero-tagline{
+  font-family:var(--ff-sub);font-size:1.15rem;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text2);margin-bottom:2.5rem;max-width:520px;
+}
+
+.hero-stats{display:flex;gap:3rem;margin-bottom:3rem}
+.h-stat-num{
+  font-family:var(--ff-head);font-size:3rem;color:var(--text);line-height:1;
+}
+.h-stat-num em{color:var(--accent);font-style:normal}
+.h-stat-label{font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-top:4px}
+
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+
+.btn-primary{
+  padding:16px 36px;
+  background:var(--accent);color:var(--bg);
+  border:none;border-radius:4px;
+  font-family:var(--ff-sub);font-size:1rem;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;
+  cursor:pointer;transition:all .25s;
+  display:inline-flex;align-items:center;gap:10px;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(var(--accent-rgb),.4)}
+
+.btn-ghost{
+  padding:16px 36px;
+  background:transparent;color:var(--text);
+  border:2px solid var(--border);border-radius:4px;
+  font-family:var(--ff-sub);font-size:1rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  cursor:pointer;transition:all .25s;
+}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Hero side card */
+.hero-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 24px 60px var(--shadow2);
+  position:relative;
+}
+.hero-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--accent),#00e5ff);
+}
+
+.trainer-visual{
+  height:320px;
+  background:linear-gradient(160deg,var(--bg3),var(--bg2));
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.trainer-visual::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;height:80px;
+  background:linear-gradient(to top,var(--surface),transparent);
+}
+
+.hero-card-body{padding:1.5rem}
+.trainer-name{font-family:var(--ff-head);font-size:1.6rem;color:var(--text)}
+.trainer-title{
+  font-family:var(--ff-sub);font-size:.8rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);margin:4px 0 1rem;
+}
+
+.cert-list{display:flex;flex-direction:column;gap:.5rem}
+.cert-item{
+  display:flex;align-items:center;gap:.6rem;
+  font-size:.78rem;color:var(--text2);
+}
+.cert-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;flex-shrink:0}
+
+.avail-bar{
+  margin-top:1.25rem;padding:10px 14px;
+  background:rgba(var(--accent-rgb),.1);
+  border:1px solid rgba(var(--accent-rgb),.2);
+  border-radius:6px;
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--ff-sub);font-size:.78rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--accent);
+}
+.pulse-dot{
+  width:8px;height:8px;background:var(--accent);border-radius:50%;
+  animation:pulse 2s infinite;flex-shrink:0;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.6)}}
+
+/* scroll indicator */
+.scroll-hint{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  z-index:1;display:flex;flex-direction:column;align-items:center;gap:.5rem;
+}
+.scroll-hint span{font-family:var(--ff-sub);font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.scroll-arrow{
+  width:26px;height:26px;border:1.5px solid var(--text3);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;color:var(--text3);
+  animation:scrollBounce 1.8s ease-in-out infinite;font-size:.7rem;
+}
+@keyframes scrollBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* ============================================================
+   MARQUEE TICKER
+   ============================================================ */
+.ticker{
+  background:var(--accent);padding:14px 0;overflow:hidden;
+  position:relative;z-index:1;
+}
+.ticker-inner{
+  display:flex;gap:0;white-space:nowrap;
+  animation:ticker 22s linear infinite;
+}
+.ticker-item{
+  font-family:var(--ff-head);font-size:1.1rem;letter-spacing:.05em;
+  color:var(--bg);padding:0 2rem;display:inline-flex;align-items:center;gap:2rem;
+}
+.ticker-item::after{content:'✦';opacity:.5}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ============================================================
+   SECTION COMMONS
+   ============================================================ */
+section{padding:6.5rem 2.5rem;position:relative;z-index:1}
+.container{max-width:1300px;margin:0 auto}
+
+.section-label{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--ff-sub);font-size:.72rem;font-weight:800;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--accent);
+  margin-bottom:1rem;
+}
+.section-label::before{content:'';width:24px;height:2px;background:var(--accent)}
+
+.section-title{
+  font-size:clamp(2.8rem,5vw,5rem);color:var(--text);
+  margin-bottom:.75rem;
+}
+.section-title .dim{color:var(--text3)}
+.section-desc{
+  font-size:1rem;color:var(--text2);max-width:520px;margin-bottom:3.5rem;
+}
+
+/* ============================================================
+   ABOUT
+   ============================================================ */
+.about{background:var(--bg2)}
+.about-inner{
+  display:grid;grid-template-columns:400px 1fr;gap:6rem;align-items:start;
+}
+
+.about-img-wrap{
+  position:relative;
+}
+.about-img{
+  background:linear-gradient(145deg,var(--bg3),var(--surface));
+  border-radius:4px;height:520px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.about-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(var(--accent-rgb),.08) 0%,transparent 60%);
+}
+
+.exp-badge{
+  position:absolute;bottom:-20px;right:-20px;
+  width:110px;height:110px;
+  background:var(--accent);border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 8px 32px rgba(var(--accent-rgb),.4);
+}
+.exp-badge .num{font-family:var(--ff-head);font-size:2.4rem;color:var(--bg);line-height:1}
+.exp-badge .lbl{font-family:var(--ff-sub);font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);opacity:.8}
+
+.about-content{padding-top:2rem}
+.about-content p{font-size:.97rem;color:var(--text2);line-height:1.8;margin-bottom:1.25rem}
+
+.certs-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:2rem 0;
+}
+.cert-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:1rem 1.15rem;
+  display:flex;align-items:center;gap:.75rem;
+  transition:all .2s;
+}
+.cert-card:hover{border-color:var(--border2);transform:translateX(3px)}
+.cert-card .icon{font-size:1.3rem;flex-shrink:0}
+.cert-card .text strong{display:block;font-size:.82rem;font-weight:600;color:var(--text)}
+.cert-card .text span{font-size:.72rem;color:var(--text3)}
+
+/* ============================================================
+   SPECIALTIES
+   ============================================================ */
+.specialties{background:var(--bg)}
+.spec-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  border:1px solid var(--border);border-radius:8px;overflow:hidden;
+  background:var(--border);
+}
+.spec-card{
+  background:var(--card);padding:2.5rem 2rem;
+  position:relative;overflow:hidden;
+  transition:all .3s;cursor:default;
+}
+.spec-card::before{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:var(--accent);
+  transform:scaleX(0);transform-origin:left;transition:.3s;
+}
+.spec-card:hover::before{transform:scaleX(1)}
+.spec-card:hover{background:var(--surface)}
+
+.spec-num{
+  font-family:var(--ff-head);font-size:4rem;
+  color:rgba(var(--accent-rgb),.12);
+  line-height:1;margin-bottom:1.25rem;
+}
+.spec-icon{font-size:2rem;margin-bottom:1rem}
+.spec-card h3{
+  font-family:var(--ff-sub);font-size:1.15rem;font-weight:800;
+  letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text);margin-bottom:.6rem;
+}
+.spec-card p{font-size:.87rem;color:var(--text2);line-height:1.65}
+
+.spec-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1rem}
+.spec-tag{
+  font-size:.7rem;font-family:var(--ff-sub);font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 9px;
+  background:rgba(var(--accent-rgb),.1);
+  color:var(--accent);border-radius:3px;
+}
+
+/* ============================================================
+   TRANSFORMATIONS (Before/After)
+   ============================================================ */
+.transformations{background:var(--bg2)}
+.trans-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+}
+.trans-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;overflow:hidden;transition:all .3s;
+}
+.trans-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px var(--shadow2)}
+
+.before-after{
+  display:grid;grid-template-columns:1fr 1fr;
+  height:220px;position:relative;
+}
+.ba-side{
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--ff-head);
+  position:relative;overflow:hidden;
+}
+.ba-side.before{background:linear-gradient(135deg,#1a1a1a,#2a2a2a)}
+.ba-side.after{background:linear-gradient(135deg,rgba(var(--accent-rgb),.15),rgba(var(--accent-rgb),.05))}
+[data-theme="light"] .ba-side.before{background:linear-gradient(135deg,#c8c8c8,#d8d8d8)}
+[data-theme="light"] .ba-side.after{background:linear-gradient(135deg,rgba(var(--accent-rgb),.18),rgba(var(--accent-rgb),.05))}
+
+.ba-label{
+  position:absolute;top:.6rem;left:.6rem;
+  font-family:var(--ff-sub);font-size:.65rem;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:2px 8px;border-radius:3px;
+}
+.before .ba-label{background:var(--bg);color:var(--text3)}
+.after .ba-label{background:var(--accent);color:var(--bg)}
+
+.ba-divider{
+  position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--accent);z-index:2;
+}
+.ba-divider::after{
+  content:'◆';
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  color:var(--accent);font-size:.75rem;
+  background:var(--card);padding:4px;border-radius:50%;
+}
+
+.trans-body{padding:1.25rem 1.4rem}
+.trans-name{
+  font-family:var(--ff-sub);font-size:.95rem;font-weight:800;
+  text-transform:uppercase;letter-spacing:.04em;color:var(--text);
+}
+.trans-detail{font-size:.78rem;color:var(--text3);margin:2px 0 .75rem}
+.trans-metrics{display:flex;gap:.75rem}
+.t-metric{
+  flex:1;background:var(--surface);
+  border-radius:5px;padding:.5rem .6rem;text-align:center;
+}
+.t-metric-val{
+  font-family:var(--ff-head);font-size:1.05rem;color:var(--accent);line-height:1;
+}
+.t-metric-label{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+
+/* Body SVG in before/after */
+.body-svg{opacity:.35}
+
+/* ============================================================
+   PROGRAMS / PRICING
+   ============================================================ */
+.programs{background:var(--bg)}
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+}
+.price-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:2.5rem 2rem;
+  position:relative;overflow:hidden;transition:all .3s;
+}
+.price-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 16px 40px var(--shadow2)}
+.price-card.featured{
+  border-color:var(--accent);
+  background:var(--surface);
+}
+.price-card.featured::after{
+  content:'MOST POPULAR';
+  position:absolute;top:1.2rem;right:1.2rem;
+  font-family:var(--ff-sub);font-size:.65rem;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;
+  background:var(--accent);color:var(--bg);
+  padding:3px 10px;border-radius:3px;
+}
+
+.plan-name{
+  font-family:var(--ff-sub);font-size:.78rem;font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent);
+  margin-bottom:.5rem;
+}
+.plan-price{
+  font-family:var(--ff-head);font-size:3.5rem;color:var(--text);
+  line-height:1;margin-bottom:.25rem;
+}
+.plan-price sup{font-size:1.5rem;vertical-align:super}
+.plan-price sub{font-size:1rem;color:var(--text3);font-family:var(--ff-body)}
+.plan-desc{font-size:.85rem;color:var(--text2);margin:.75rem 0 1.5rem;line-height:1.6}
+
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:.65rem;margin-bottom:2rem}
+.plan-features li{
+  display:flex;align-items:center;gap:.65rem;
+  font-size:.87rem;color:var(--text2);
+}
+.plan-features li::before{
+  content:'✓';color:var(--accent);font-weight:700;font-size:.9rem;flex-shrink:0;
+}
+.plan-features li.off{color:var(--text3)}
+.plan-features li.off::before{content:'✗';color:var(--text3)}
+
+.btn-plan{
+  width:100%;padding:13px;
+  background:var(--accent);color:var(--bg);
+  border:none;border-radius:4px;
+  font-family:var(--ff-sub);font-size:.85rem;font-weight:800;
+  letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;
+}
+.btn-plan:hover{opacity:.85}
+.btn-plan.outline{background:transparent;color:var(--text);border:2px solid var(--border)}
+.btn-plan.outline:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+.testimonials{background:var(--bg2)}
+.testi-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+}
+.testi-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:2rem;
+  position:relative;overflow:hidden;transition:all .3s;
+}
+.testi-card:hover{border-color:var(--border2);box-shadow:0 12px 36px var(--shadow2)}
+.testi-card.featured{border-color:var(--accent)}
+
+.testi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem}
+.testi-avatar{
+  width:48px;height:48px;border-radius:50%;
+  font-family:var(--ff-head);font-size:1.2rem;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--bg);font-weight:900;
+}
+.stars-block{color:#f5c518;font-size:.9rem;letter-spacing:2px}
+
+.testi-text{
+  font-size:.9rem;color:var(--text2);line-height:1.75;
+  font-style:italic;margin-bottom:1.5rem;
+}
+.testi-text::before{content:'"';font-size:1.4rem;color:var(--accent);line-height:0;vertical-align:-4px;margin-right:2px}
+.testi-text::after{content:'"';font-size:1.4rem;color:var(--accent);line-height:0;vertical-align:-4px;margin-left:2px}
+
+.testi-author-name{font-family:var(--ff-sub);font-size:.88rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text)}
+.testi-author-meta{font-size:.75rem;color:var(--text3);margin-top:2px}
+
+.testi-result{
+  margin-top:1rem;padding:.65rem 1rem;
+  background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.18);
+  border-radius:4px;
+  font-family:var(--ff-sub);font-size:.75rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--accent);
+}
+
+/* ============================================================
+   HOW IT WORKS
+   ============================================================ */
+.process{background:var(--bg)}
+.process-steps{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:2px;
+  background:var(--border);border:1px solid var(--border);
+  border-radius:8px;overflow:hidden;
+}
+.process-step{
+  background:var(--card);padding:2.5rem 1.75rem;
+  position:relative;transition:all .3s;
+}
+.process-step:hover{background:var(--surface)}
+
+.step-num{
+  font-family:var(--ff-head);font-size:5rem;
+  color:rgba(var(--accent-rgb),.1);line-height:1;
+  margin-bottom:-.5rem;
+}
+.step-icon{font-size:1.8rem;margin-bottom:.75rem}
+.process-step h3{
+  font-family:var(--ff-sub);font-size:1rem;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text);margin-bottom:.5rem;
+}
+.process-step p{font-size:.83rem;color:var(--text2);line-height:1.6}
+
+.step-arrow{
+  position:absolute;right:0;top:50%;transform:translateY(-50%);
+  color:var(--accent);font-size:1.2rem;z-index:2;
+  display:none;
+}
+@media(min-width:900px){.process-step:not(:last-child) .step-arrow{display:block}}
+
+/* ============================================================
+   CTA BANNER
+   ============================================================ */
+.cta-banner{
+  background:var(--accent);
+  padding:6rem 2.5rem;text-align:center;position:relative;overflow:hidden;
+}
+.cta-banner::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,0,0,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,.06) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.cta-banner h2{
+  font-family:var(--ff-head);font-size:clamp(3rem,7vw,7rem);
+  color:var(--bg);line-height:.95;margin-bottom:1.25rem;
+  position:relative;z-index:1;
+}
+.cta-banner p{
+  font-family:var(--ff-sub);font-size:1.05rem;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(0,0,0,.6);margin-bottom:2.5rem;position:relative;z-index:1;
+}
+.cta-btns{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;position:relative;z-index:1}
+
+.btn-dark{
+  padding:16px 40px;
+  background:var(--bg);color:var(--accent);
+  border:none;border-radius:4px;
+  font-family:var(--ff-sub);font-size:1rem;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;
+  cursor:pointer;transition:all .25s;
+}
+.btn-dark:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+
+.btn-dark-outline{
+  padding:16px 40px;background:transparent;
+  color:var(--bg);border:2px solid rgba(0,0,0,.3);border-radius:4px;
+  font-family:var(--ff-sub);font-size:1rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  cursor:pointer;transition:all .25s;
+}
+.btn-dark-outline:hover{border-color:var(--bg);background:rgba(0,0,0,.08)}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  padding:4rem 2.5rem 2rem;
+}
+.footer-inner{
+  max-width:1300px;margin:0 auto;
+  display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr;
+  gap:3rem;padding-bottom:3rem;
+  border-bottom:1px solid var(--border);margin-bottom:2rem;
+}
+.footer-logo{font-family:var(--ff-head);font-size:2rem;color:var(--text);margin-bottom:.75rem}
+.footer-logo span{color:var(--accent)}
+.footer-bio{font-size:.87rem;color:var(--text3);line-height:1.7;max-width:300px}
+
+.footer-social{display:flex;gap:.5rem;margin-top:1.5rem}
+.social-btn{
+  width:38px;height:38px;border-radius:4px;
+  border:1px solid var(--border);background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.95rem;cursor:pointer;transition:all .2s;
+  color:var(--text2);
+}
+.social-btn:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+
+.footer-col h4{
+  font-family:var(--ff-sub);font-size:.78rem;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text);margin-bottom:1rem;
+}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.footer-col a{font-size:.85rem;color:var(--text3);transition:color .2s}
+.footer-col a:hover{color:var(--accent)}
+
+.footer-bottom{
+  max-width:1300px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:.78rem;color:var(--text3);flex-wrap:wrap;gap:.5rem;
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-32px);transition:opacity .7s ease,transform .7s ease}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:1100px){
+  .hero-inner{grid-template-columns:1fr;padding-bottom:3rem}
+  .hero-card{max-width:420px}
+  .about-inner{grid-template-columns:1fr;gap:3rem}
+  .about-img{height:340px}
+  .exp-badge{bottom:-10px;right:1rem}
+  .spec-grid{grid-template-columns:1fr 1fr}
+  .trans-grid{grid-template-columns:1fr 1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr 1fr}
+  .process-steps{grid-template-columns:1fr 1fr}
+  .footer-inner{grid-template-columns:1fr 1fr;gap:2rem}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+}
+@media(max-width:700px){
+  section{padding:4rem 1.25rem}
+  nav{padding:0 1.25rem}
+  .hero-inner{padding:0 1.25rem 3rem}
+  .hero h1{font-size:clamp(3.5rem,16vw,6rem)}
+  .spec-grid{grid-template-columns:1fr}
+  .trans-grid{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .process-steps{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr}
+  .hero-stats{gap:1.5rem}
+  .certs-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ======= NAV ======= -->
+<nav>
+  <div class="nav-logo">MARCUS<span class="slash">/</span>REID</div>
+
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#specialties">Training</a></li>
+    <li><a href="#transformations">Results</a></li>
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <div class="font-menu">
+      <button class="ctrl-btn" title="Font" onclick="toggleFontMenu()">Aa</button>
+      <div class="font-dropdown" id="fontDropdown">
+        <div class="font-opt active" onclick="setFont('impact')">Impact (Bold)</div>
+        <div class="font-opt" onclick="setFont('strong')">Oswald (Strong)</div>
+        <div class="font-opt" onclick="setFont('clean')">Nunito (Clean)</div>
+      </div>
+    </div>
+    <button class="ctrl-btn" id="themeBtn" title="Theme" onclick="toggleTheme()">☀️</button>
+    <button class="btn-nav" onclick="document.getElementById('programs').scrollIntoView({behavior:'smooth'})">Start Now</button>
+    <div class="hamburger" onclick="toggleMobile()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="toggleMobile()">About</a>
+  <a href="#specialties" onclick="toggleMobile()">Training</a>
+  <a href="#transformations" onclick="toggleMobile()">Results</a>
+  <a href="#programs" onclick="toggleMobile()">Programs</a>
+  <a href="#testimonials" onclick="toggleMobile()">Reviews</a>
+</div>
+
+<!-- ======= HERO ======= -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-watermark">10</div>
+
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-tag">Elite Personal Training · Online & In-Person</div>
+      <h1>
+        <span class="outline">BUILD</span><br>
+        <span class="highlight">YOUR</span><br>
+        BEST<br>
+        <span class="outline">BODY</span>
+      </h1>
+      <p class="hero-tagline">Strength · Conditioning · Body Recomposition · Athletic Performance</p>
+
+      <div class="hero-stats">
+        <div>
+          <div class="h-stat-num">500<em>+</em></div>
+          <div class="h-stat-label">Clients Transformed</div>
+        </div>
+        <div>
+          <div class="h-stat-num">10<em>yr</em></div>
+          <div class="h-stat-label">Experience</div>
+        </div>
+        <div>
+          <div class="h-stat-num">98<em>%</em></div>
+          <div class="h-stat-label">Goal Achievement</div>
+        </div>
+      </div>
+
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="document.getElementById('programs').scrollIntoView({behavior:'smooth'})">
+          ⚡ Get My Program
+        </button>
+        <button class="btn-ghost" onclick="document.getElementById('transformations').scrollIntoView({behavior:'smooth'})">
+          View Transformations
+        </button>
+      </div>
+    </div>
+
+    <!-- Side card -->
+    <div class="hero-card">
+      <div class="trainer-visual">
+        <!-- SVG Trainer Illustration -->
+        <svg viewBox="0 0 280 340" width="230" height="280" class="body-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Torso -->
+          <rect x="85" y="150" width="110" height="130" rx="8" fill="#2a2a2a"/>
+          <!-- Shirt details -->
+          <path d="M85,155 L140,175 L195,155" stroke="rgba(232,255,0,0.4)" stroke-width="1.5" fill="none"/>
+          <!-- Arms -->
+          <rect x="50" y="148" width="38" height="90" rx="16" fill="#c8a882"/>
+          <rect x="192" y="148" width="38" height="90" rx="16" fill="#c8a882"/>
+          <!-- Forearms angled -->
+          <rect x="30" y="225" width="32" height="55" rx="12" fill="#c8a882" transform="rotate(15 46 252)"/>
+          <rect x="218" y="225" width="32" height="55" rx="12" fill="#c8a882" transform="rotate(-15 234 252)"/>
+          <!-- Dumbbells -->
+          <rect x="8" y="258" width="40" height="12" rx="4" fill="#888"/>
+          <rect x="8" y="258" width="10" height="12" rx="2" fill="#555"/>
+          <rect x="38" y="258" width="10" height="12" rx="2" fill="#555"/>
+          <rect x="232" y="258" width="40" height="12" rx="4" fill="#888"/>
+          <rect x="232" y="258" width="10" height="12" rx="2" fill="#555"/>
+          <rect x="262" y="258" width="10" height="12" rx="2" fill="#555"/>
+          <!-- Legs -->
+          <rect x="90" y="275" width="44" height="65" rx="8" fill="#1a1a1a"/>
+          <rect x="146" y="275" width="44" height="65" rx="8" fill="#1a1a1a"/>
+          <!-- Shoes -->
+          <rect x="86" y="330" width="52" height="16" rx="6" fill="#333"/>
+          <rect x="142" y="330" width="52" height="16" rx="6" fill="#333"/>
+          <!-- Neck -->
+          <rect x="122" y="120" width="36" height="38" rx="10" fill="#c8a882"/>
+          <!-- Head -->
+          <ellipse cx="140" cy="85" rx="40" ry="44" fill="#c8a882"/>
+          <!-- Hair -->
+          <path d="M100,75 Q100,42 140,40 Q180,42 180,75 L178,60 Q165,30 140,28 Q115,30 102,60 Z" fill="#1a1a1a"/>
+          <!-- Fade haircut sides -->
+          <rect x="100" y="65" width="8" height="30" rx="4" fill="#2a2a2a"/>
+          <rect x="172" y="65" width="8" height="30" rx="4" fill="#2a2a2a"/>
+          <!-- Eyes -->
+          <ellipse cx="128" cy="83" rx="5" ry="5.5" fill="#1a1a1a"/>
+          <ellipse cx="152" cy="83" rx="5" ry="5.5" fill="#1a1a1a"/>
+          <circle cx="130" cy="81" r="1.5" fill="white"/>
+          <circle cx="154" cy="81" r="1.5" fill="white"/>
+          <!-- Brow -->
+          <path d="M122,76 Q128,73 134,76" stroke="#3a2a1a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M146,76 Q152,73 158,76" stroke="#3a2a1a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <!-- Jaw / stubble hint -->
+          <path d="M118,95 Q140,108 162,95" stroke="#b8987a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <!-- Chest muscle lines -->
+          <path d="M110,168 Q140,178 170,168" stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none"/>
+          <!-- Yellow accent stripe on shirt -->
+          <rect x="130" y="150" width="20" height="4" rx="2" fill="rgba(232,255,0,0.5)"/>
+        </svg>
+      </div>
+      <div class="hero-card-body">
+        <div class="trainer-name">Marcus Reid</div>
+        <div class="trainer-title">CSCS · Precision Nutrition · 10+ Years</div>
+        <div class="cert-list">
+          <div class="cert-item"><div class="cert-dot"></div> NSCA Certified Strength & Conditioning Specialist</div>
+          <div class="cert-item"><div class="cert-dot"></div> Precision Nutrition Level 2 Coach</div>
+          <div class="cert-item"><div class="cert-dot"></div> FMS Certified Movement Specialist</div>
+        </div>
+        <div class="avail-bar">
+          <div class="pulse-dot"></div>
+          Accepting new clients — 3 spots left
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arrow">↓</div>
+  </div>
+</section>
+
+<!-- ======= TICKER ======= -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Strength Training</span>
+    <span class="ticker-item">Body Recomposition</span>
+    <span class="ticker-item">Athletic Performance</span>
+    <span class="ticker-item">Nutrition Coaching</span>
+    <span class="ticker-item">Fat Loss</span>
+    <span class="ticker-item">Muscle Building</span>
+    <span class="ticker-item">Online Coaching</span>
+    <span class="ticker-item">Mobility & Recovery</span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item">Strength Training</span>
+    <span class="ticker-item">Body Recomposition</span>
+    <span class="ticker-item">Athletic Performance</span>
+    <span class="ticker-item">Nutrition Coaching</span>
+    <span class="ticker-item">Fat Loss</span>
+    <span class="ticker-item">Muscle Building</span>
+    <span class="ticker-item">Online Coaching</span>
+    <span class="ticker-item">Mobility & Recovery</span>
+  </div>
+</div>
+
+<!-- ======= ABOUT ======= -->
+<section class="about" id="about">
+  <div class="container about-inner">
+    <div class="about-img-wrap reveal-left">
+      <div class="about-img">
+        <svg viewBox="0 0 240 360" width="200" height="300" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Trophy / achievement icon -->
+          <circle cx="120" cy="140" r="70" fill="rgba(232,255,0,0.06)" stroke="rgba(232,255,0,0.15)" stroke-width="1"/>
+          <circle cx="120" cy="140" r="50" fill="rgba(232,255,0,0.04)" stroke="rgba(232,255,0,0.1)" stroke-width="1"/>
+          <!-- Lightning bolt -->
+          <path d="M135,95 L108,145 L125,145 L105,190 L148,130 L130,130 Z" fill="rgba(232,255,0,0.55)" stroke="rgba(232,255,0,0.9)" stroke-width="1.5"/>
+          <!-- Medal circles -->
+          <circle cx="60" cy="270" r="28" fill="rgba(232,255,0,0.1)" stroke="rgba(232,255,0,0.3)" stroke-width="1.5"/>
+          <text x="60" y="275" font-size="18" text-anchor="middle" fill="rgba(232,255,0,0.7)">🏆</text>
+          <circle cx="120" cy="285" r="28" fill="rgba(232,255,0,0.1)" stroke="rgba(232,255,0,0.3)" stroke-width="1.5"/>
+          <text x="120" y="290" font-size="18" text-anchor="middle" fill="rgba(232,255,0,0.7)">💪</text>
+          <circle cx="180" cy="270" r="28" fill="rgba(232,255,0,0.1)" stroke="rgba(232,255,0,0.3)" stroke-width="1.5"/>
+          <text x="180" y="275" font-size="18" text-anchor="middle" fill="rgba(232,255,0,0.7)">🎯</text>
+        </svg>
+      </div>
+      <div class="exp-badge">
+        <div class="num">10</div>
+        <div class="lbl">Years</div>
+      </div>
+    </div>
+
+    <div class="about-content reveal">
+      <div class="section-label">About Marcus</div>
+      <h2 class="section-title">No Excuses.<br><span class="dim">Only Results.</span></h2>
+      <p>Marcus Reid is a NSCA-certified Strength & Conditioning Specialist based in Dubai with a decade of transforming everyday people into the best versions of themselves — athletes, executives, new mums, and complete beginners included.</p>
+      <p>His approach cuts through the noise of the fitness industry: no fads, no gimmicks. Just intelligent, periodised programming backed by sport science, precise nutrition strategy, and relentless accountability — delivered online or in-person.</p>
+      <p>Marcus has trained professional athletes, corporate executives, and hundreds of everyday clients across 4 countries. His philosophy: <strong style="color:var(--accent)">consistency beats perfection every single time.</strong></p>
+
+      <div class="certs-grid">
+        <div class="cert-card">
+          <div class="icon">🏋️</div>
+          <div class="text"><strong>NSCA — CSCS</strong><span>Strength & Conditioning</span></div>
+        </div>
+        <div class="cert-card">
+          <div class="icon">🥗</div>
+          <div class="text"><strong>Precision Nutrition L2</strong><span>Nutrition Coaching</span></div>
+        </div>
+        <div class="cert-card">
+          <div class="icon">🔬</div>
+          <div class="text"><strong>FMS Certified</strong><span>Movement Screening</span></div>
+        </div>
+        <div class="cert-card">
+          <div class="icon">❤️</div>
+          <div class="text"><strong>ACSM — CPT</strong><span>Clinical Exercise</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= SPECIALTIES ======= -->
+<section class="specialties" id="specialties">
+  <div class="container">
+    <div class="reveal" style="max-width:700px;margin-bottom:3.5rem">
+      <div class="section-label">What I Do</div>
+      <h2 class="section-title">Training <span class="dim">Disciplines</span></h2>
+      <p class="section-desc">Every program is periodised, personalised, and built around your life — not against it.</p>
+    </div>
+    <div class="spec-grid reveal">
+      <div class="spec-card">
+        <div class="spec-num">01</div>
+        <div class="spec-icon">🏋️</div>
+        <h3>Strength & Hypertrophy</h3>
+        <p>Progressive overload programming using powerlifting, bodybuilding, and hybrid methodologies. Build real, functional muscle that performs as good as it looks.</p>
+        <div class="spec-tags">
+          <span class="spec-tag">Powerlifting</span>
+          <span class="spec-tag">Bodybuilding</span>
+          <span class="spec-tag">Periodisation</span>
+        </div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-num">02</div>
+        <div class="spec-icon">🔥</div>
+        <h3>Fat Loss & Recomposition</h3>
+        <p>Science-based body recomposition protocols: strategic calorie management, metabolic conditioning, and body composition tracking — no crash diets.</p>
+        <div class="spec-tags">
+          <span class="spec-tag">Recomp</span>
+          <span class="spec-tag">DEXA Tracking</span>
+          <span class="spec-tag">Nutrition</span>
+        </div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-num">03</div>
+        <div class="spec-icon">⚡</div>
+        <h3>Athletic Performance</h3>
+        <p>Speed, power, agility, and sport-specific conditioning. Trusted by competitive athletes in football, MMA, basketball, and track & field.</p>
+        <div class="spec-tags">
+          <span class="spec-tag">Speed</span>
+          <span class="spec-tag">Power</span>
+          <span class="spec-tag">Agility</span>
+        </div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-num">04</div>
+        <div class="spec-icon">🍽️</div>
+        <h3>Nutrition Coaching</h3>
+        <p>Macro programming, meal timing, and sustainable dietary habits. No rigid meal plans — flexible dieting frameworks that fit your lifestyle.</p>
+        <div class="spec-tags">
+          <span class="spec-tag">Macros</span>
+          <span class="spec-tag">Flexible Dieting</span>
+          <span class="spec-tag">Habits</span>
+        </div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-num">05</div>
+        <div class="spec-icon">🌀</div>
+        <h3>Mobility & Injury Prevention</h3>
+        <p>FMS-based movement screening and corrective exercise protocols. Move better, train harder, and stay injury-free long-term.</p>
+        <div class="spec-tags">
+          <span class="spec-tag">FMS</span>
+          <span class="spec-tag">Corrective</span>
+          <span class="spec-tag">Flexibility</span>
+        </div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-num">06</div>
+        <div class="spec-icon">📱</div>
+        <h3>Online Coaching</h3>
+        <p>Full-service remote coaching via a dedicated app — custom programs, weekly check-ins, video form reviews, and 24/7 messaging support.</p>
+        <div class="spec-tags">
+          <span class="spec-tag">App-Based</span>
+          <span class="spec-tag">Video Reviews</span>
+          <span class="spec-tag">24/7 Support</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= TRANSFORMATIONS ======= -->
+<section class="transformations" id="transformations">
+  <div class="container">
+    <div class="reveal" style="margin-bottom:3.5rem">
+      <div class="section-label">Client Results</div>
+      <h2 class="section-title">Real <span class="dim">Transformations</span></h2>
+      <p class="section-desc">These results represent real clients with real lives — documented with consistency and time. No photoshop, no steroids, no shortcuts.</p>
+    </div>
+    <div class="trans-grid">
+
+      <div class="trans-card reveal">
+        <div class="before-after">
+          <div class="ba-side before">
+            <span class="ba-label">Before</span>
+            <svg viewBox="0 0 80 120" width="60" height="90" fill="none">
+              <ellipse cx="40" cy="30" rx="16" ry="17" fill="#555"/>
+              <rect x="20" y="47" width="40" height="55" rx="8" fill="#444"/>
+              <rect x="8" y="52" width="16" height="45" rx="8" fill="#555"/>
+              <rect x="56" y="52" width="16" height="45" rx="8" fill="#555"/>
+              <rect x="18" y="98" width="18" height="28" rx="6" fill="#3a3a3a"/>
+              <rect x="44" y="98" width="18" height="28" rx="6" fill="#3a3a3a"/>
+            </svg>
+          </div>
+          <div class="ba-divider"></div>
+          <div class="ba-side after">
+            <span class="ba-label">After</span>
+            <svg viewBox="0 0 80 120" width="60" height="90" fill="none">
+              <ellipse cx="40" cy="28" rx="15" ry="16" fill="#c8a882"/>
+              <rect x="22" y="44" width="36" height="52" rx="6" fill="#2a2a2a"/>
+              <path d="M22,60 L40,68 L58,60" stroke="rgba(232,255,0,0.4)" stroke-width="1.5" fill="none"/>
+              <rect x="6" y="48" width="18" height="42" rx="8" fill="#c8a882"/>
+              <rect x="56" y="48" width="18" height="42" rx="8" fill="#c8a882"/>
+              <rect x="20" y="92" width="16" height="28" rx="5" fill="#1a1a1a"/>
+              <rect x="44" y="92" width="16" height="28" rx="5" fill="#1a1a1a"/>
+            </svg>
+          </div>
+        </div>
+        <div class="trans-body">
+          <div class="trans-name">James K.</div>
+          <div class="trans-detail">32 · Sales Director · 6-Month Program</div>
+          <div class="trans-metrics">
+            <div class="t-metric"><div class="t-metric-val">-22kg</div><div class="t-metric-label">Weight Lost</div></div>
+            <div class="t-metric"><div class="t-metric-val">+14%</div><div class="t-metric-label">Muscle</div></div>
+            <div class="t-metric"><div class="t-metric-val">6mo</div><div class="t-metric-label">Timeline</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trans-card reveal reveal-delay-1">
+        <div class="before-after">
+          <div class="ba-side before">
+            <span class="ba-label">Before</span>
+            <svg viewBox="0 0 80 120" width="60" height="90" fill="none">
+              <ellipse cx="40" cy="29" rx="14" ry="15" fill="#888"/>
+              <rect x="22" y="44" width="36" height="50" rx="6" fill="#666"/>
+              <rect x="8" y="50" width="16" height="40" rx="7" fill="#888"/>
+              <rect x="56" y="50" width="16" height="40" rx="7" fill="#888"/>
+              <rect x="22" y="90" width="15" height="26" rx="5" fill="#555"/>
+              <rect x="43" y="90" width="15" height="26" rx="5" fill="#555"/>
+            </svg>
+          </div>
+          <div class="ba-divider"></div>
+          <div class="ba-side after">
+            <span class="ba-label">After</span>
+            <svg viewBox="0 0 80 120" width="60" height="90" fill="none">
+              <ellipse cx="40" cy="27" rx="13" ry="14" fill="#d4a882"/>
+              <rect x="24" y="41" width="32" height="48" rx="5" fill="#1a1a1a"/>
+              <rect x="8" y="44" width="18" height="40" rx="8" fill="#d4a882"/>
+              <rect x="54" y="44" width="18" height="40" rx="8" fill="#d4a882"/>
+              <rect x="23" y="87" width="14" height="26" rx="4" fill="#333"/>
+              <rect x="43" y="87" width="14" height="26" rx="4" fill="#333"/>
+            </svg>
+          </div>
+        </div>
+        <div class="trans-body">
+          <div class="trans-name">Rania M.</div>
+          <div class="trans-detail">28 · Nurse · 4-Month Program</div>
+          <div class="trans-metrics">
+            <div class="t-metric"><div class="t-metric-val">-15kg</div><div class="t-metric-label">Weight Lost</div></div>
+            <div class="t-metric"><div class="t-metric-val">-12%</div><div class="t-metric-label">Body Fat</div></div>
+            <div class="t-metric"><div class="t-metric-val">4mo</div><div class="t-metric-label">Timeline</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trans-card reveal reveal-delay-2">
+        <div class="before-after">
+          <div class="ba-side before">
+            <span class="ba-label">Before</span>
+            <svg viewBox="0 0 80 120" width="60" height="90" fill="none">
+              <ellipse cx="40" cy="30" rx="13" ry="14" fill="#777"/>
+              <rect x="23" y="44" width="34" height="48" rx="6" fill="#555"/>
+              <rect x="10" y="50" width="15" height="38" rx="6" fill="#777"/>
+              <rect x="55" y="50" width="15" height="38" rx="6" fill="#777"/>
+              <rect x="22" y="89" width="15" height="25" rx="5" fill="#444"/>
+              <rect x="43" y="89" width="15" height="25" rx="5" fill="#444"/>
+            </svg>
+          </div>
+          <div class="ba-divider"></div>
+          <div class="ba-side after">
+            <span class="ba-label">After</span>
+            <svg viewBox="0 0 80 120" width="60" height="90" fill="none">
+              <ellipse cx="40" cy="28" rx="13" ry="14" fill="#c8a882"/>
+              <rect x="23" y="42" width="34" height="48" rx="5" fill="#111"/>
+              <path d="M23,56 L40,64 L57,56" stroke="rgba(232,255,0,0.5)" stroke-width="1.5" fill="none"/>
+              <rect x="7" y="45" width="18" height="42" rx="8" fill="#c8a882"/>
+              <rect x="55" y="45" width="18" height="42" rx="8" fill="#c8a882"/>
+              <rect x="22" y="87" width="14" height="26" rx="4" fill="#222"/>
+              <rect x="44" y="87" width="14" height="26" rx="4" fill="#222"/>
+            </svg>
+          </div>
+        </div>
+        <div class="trans-body">
+          <div class="trans-name">Yusuf A.</div>
+          <div class="trans-detail">24 · Student Athlete · 5-Month Program</div>
+          <div class="trans-metrics">
+            <div class="t-metric"><div class="t-metric-val">+18kg</div><div class="t-metric-label">Muscle</div></div>
+            <div class="t-metric"><div class="t-metric-val">180kg</div><div class="t-metric-label">Deadlift</div></div>
+            <div class="t-metric"><div class="t-metric-val">5mo</div><div class="t-metric-label">Timeline</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======= PROGRAMS / PRICING ======= -->
+<section class="programs" id="programs">
+  <div class="container">
+    <div class="reveal" style="margin-bottom:3.5rem">
+      <div class="section-label">Programs</div>
+      <h2 class="section-title">Choose Your <span class="dim">Level</span></h2>
+      <p class="section-desc">All plans include personalised programming, nutrition guidance, and direct coach access. No cookie-cutter templates.</p>
+    </div>
+    <div class="pricing-grid">
+
+      <div class="price-card reveal">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price"><sup>$</sup>149<sub>/mo</sub></div>
+        <div class="plan-desc">For beginners and those getting back into fitness. Build your foundation right.</div>
+        <ul class="plan-features">
+          <li>Custom training program</li>
+          <li>Nutrition macro targets</li>
+          <li>Weekly check-in (text)</li>
+          <li>Exercise video library</li>
+          <li>App-based tracking</li>
+          <li class="off">Video form reviews</li>
+          <li class="off">1:1 monthly calls</li>
+        </ul>
+        <button class="btn-plan outline" onclick="alert('Redirect to booking/payment system')">Get Started</button>
+      </div>
+
+      <div class="price-card featured reveal reveal-delay-1">
+        <div class="plan-name">Elite Coaching</div>
+        <div class="plan-price"><sup>$</sup>299<sub>/mo</sub></div>
+        <div class="plan-desc">Full-service online coaching for serious results. This is the flagship experience.</div>
+        <ul class="plan-features">
+          <li>Custom periodised program</li>
+          <li>Full nutrition coaching</li>
+          <li>Weekly check-in (video call)</li>
+          <li>Unlimited form video reviews</li>
+          <li>Daily WhatsApp access</li>
+          <li>Monthly 1:1 strategy call</li>
+          <li>Supplement guidance</li>
+        </ul>
+        <button class="btn-plan" onclick="alert('Redirect to booking/payment system')">⚡ Start Elite</button>
+      </div>
+
+      <div class="price-card reveal reveal-delay-2">
+        <div class="plan-name">VIP In-Person</div>
+        <div class="plan-price"><sup>$</sup>799<sub>/mo</sub></div>
+        <div class="plan-desc">12 in-person sessions per month in Dubai, plus all Elite Online features.</div>
+        <ul class="plan-features">
+          <li>12 x PT sessions/month</li>
+          <li>Custom periodised program</li>
+          <li>Full nutrition coaching</li>
+          <li>Body composition scans</li>
+          <li>Unlimited messaging</li>
+          <li>Monthly 1:1 calls</li>
+          <li>Recovery & mobility plan</li>
+        </ul>
+        <button class="btn-plan outline" onclick="alert('Redirect to booking/payment system')">Apply for VIP</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======= TESTIMONIALS ======= -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <div class="reveal" style="margin-bottom:3.5rem">
+      <div class="section-label">Client Reviews</div>
+      <h2 class="section-title">The <span class="dim">Proof</span></h2>
+      <p class="section-desc">Results speak louder. Here's what clients say after committing to the process.</p>
+    </div>
+    <div class="testi-grid">
+
+      <div class="testi-card featured reveal">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#e8ff00,#aabb00)">JK</div>
+          <div class="stars-block">★★★★★</div>
+        </div>
+        <p class="testi-text">I'd tried 3 other trainers before Marcus. This was different from week one. The program was actually tailored to me — my schedule, my gym, my food preferences. Lost 22kg and kept every kilo off for over a year now.</p>
+        <div class="testi-author-name">James K.</div>
+        <div class="testi-author-meta">Sales Director · Dubai · 6 months</div>
+        <div class="testi-result">⚡ Lost 22kg · Dropped from 24% to 11% body fat</div>
+      </div>
+
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#ff6b35,#f7c59f)">RM</div>
+          <div class="stars-block">★★★★★</div>
+        </div>
+        <p class="testi-text">As a nurse working rotating shifts, I told Marcus I could never stick to a plan. He built something that actually worked around my life. 4 months later, I'm the smallest and strongest I've ever been. I genuinely love training now.</p>
+        <div class="testi-author-name">Rania M.</div>
+        <div class="testi-author-meta">Registered Nurse · Online Client · 4 months</div>
+        <div class="testi-result">⚡ Lost 15kg · Now deadlifts 100kg</div>
+      </div>
+
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#00d2ff,#3a47d5)">YA</div>
+          <div class="stars-block">★★★★★</div>
+        </div>
+        <p class="testi-text">I went from benching 60kg to 120kg in 5 months. The programming is periodised in a way no generic gym plan even comes close to. Marcus explains the why behind everything, which made me way more committed to the process.</p>
+        <div class="testi-author-name">Yusuf A.</div>
+        <div class="testi-author-meta">Student Athlete · Dubai · 5 months</div>
+        <div class="testi-result">⚡ Bench 60→120kg · Deadlift 180kg</div>
+      </div>
+
+      <div class="testi-card reveal">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#f953c6,#b91d73)">LP</div>
+          <div class="stars-block">★★★★★</div>
+        </div>
+        <p class="testi-text">After having two kids, I honestly didn't think I could get my body back. Marcus never once made me feel like that was unrealistic. 7 months later, I'm in the best shape of my life. The nutrition coaching alone was worth every penny.</p>
+        <div class="testi-author-name">Layla P.</div>
+        <div class="testi-author-meta">Mother of 2 · UK · Online · 7 months</div>
+        <div class="testi-result">⚡ -18kg · Completed first 5K race</div>
+      </div>
+
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#43e97b,#38f9d7)">OB</div>
+          <div class="stars-block">★★★★★</div>
+        </div>
+        <p class="testi-text">Marcus trained me for my first powerlifting competition. The programming was meticulous — peaked me perfectly on the day. Hit 3 personal bests and won my weight class. I owe that result entirely to him.</p>
+        <div class="testi-author-name">Omar B.</div>
+        <div class="testi-author-meta">Powerlifter · UAE · 8 months</div>
+        <div class="testi-result">⚡ 3 x PBs · 1st place at nationals (U83)</div>
+      </div>
+
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#f7971e,#ffd200)">SH</div>
+          <div class="stars-block">★★★★★</div>
+        </div>
+        <p class="testi-text">I'm a CEO and I have almost no time. The online coaching format Marcus uses is the most efficient and effective I've found. Thirty-minute sessions, zero fluff, and results that showed up in 3 months. Actually sustainable too.</p>
+        <div class="testi-author-name">Sam H.</div>
+        <div class="testi-author-meta">CEO · London · Online · 3 months</div>
+        <div class="testi-result">⚡ -10kg · Runs 5km before every board meeting</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======= PROCESS ======= -->
+<section class="process" id="process">
+  <div class="container">
+    <div class="reveal" style="text-align:center;margin-bottom:3.5rem">
+      <div class="section-label" style="justify-content:center">Process</div>
+      <h2 class="section-title" style="text-align:center">How We <span class="dim">Work</span></h2>
+      <p class="section-desc" style="margin:0 auto;text-align:center">Four steps from enquiry to your first session.</p>
+    </div>
+    <div class="process-steps reveal">
+      <div class="process-step">
+        <div class="step-num">01</div>
+        <div class="step-icon">📋</div>
+        <h3>Apply Online</h3>
+        <p>Fill out a short intake form covering your goals, training history, schedule, and lifestyle. Takes 5 minutes.</p>
+        <div class="step-arrow">→</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <div class="step-icon">🎙️</div>
+        <h3>Strategy Call</h3>
+        <p>Free 20-minute video call to discuss your goals, ask questions, and see if we're a great fit. No pressure, no pitch.</p>
+        <div class="step-arrow">→</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <div class="step-icon">📱</div>
+        <h3>Program Delivered</h3>
+        <p>Your custom program and nutrition plan arrive in the app within 48 hours. Walk-through video included.</p>
+        <div class="step-arrow">→</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04</div>
+        <div class="step-icon">📈</div>
+        <h3>Train & Progress</h3>
+        <p>Weekly check-ins, form reviews, and ongoing adjustments. Your program evolves as you improve.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= CTA BANNER ======= -->
+<section class="cta-banner" id="booking">
+  <h2>STOP<br>WAITING.<br>START NOW.</h2>
+  <p>3 online coaching spots available this month — they won't last</p>
+  <div class="cta-btns">
+    <button class="btn-dark" onclick="alert('Redirect to Calendly or booking page')">
+      ⚡ Claim Your Spot
+    </button>
+    <button class="btn-dark-outline" onclick="window.open('https://wa.me/+971501234567','_blank')">
+      💬 WhatsApp Marcus
+    </button>
+  </div>
+</section>
+
+<!-- ======= FOOTER ======= -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">MARCUS<span>/REID</span></div>
+      <p class="footer-bio">Elite personal training and online coaching for those who are serious about results. Based in Dubai, coaching clients globally.</p>
+      <div class="footer-social">
+        <div class="social-btn" title="Instagram">📸</div>
+        <div class="social-btn" title="YouTube">▶️</div>
+        <div class="social-btn" title="TikTok">🎵</div>
+        <div class="social-btn" title="WhatsApp">💬</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#specialties">Training</a></li>
+        <li><a href="#transformations">Transformations</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#programs">Online Coaching</a></li>
+        <li><a href="#programs">In-Person PT</a></li>
+        <li><a href="#programs">Nutrition Plans</a></li>
+        <li><a href="#programs">Athlete Prep</a></li>
+        <li><a href="#programs">Corporate Wellness</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="#">📧 marcus@marcusreid.fit</a></li>
+        <li><a href="#">💬 WhatsApp +971 50 123 4567</a></li>
+        <li><a href="#">📍 Dubai, UAE & Online</a></li>
+        <li><a href="#">🕐 7 Days · 6 AM – 9 PM GST</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Marcus Reid Fitness. All rights reserved.</span>
+    <span style="color:var(--accent)">NO EXCUSES. ONLY RESULTS. ⚡</span>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+// Theme
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  btn.textContent = html.dataset.theme === 'dark' ? '☀️' : '🌙';
+}
+
+// Font
+function toggleFontMenu() {
+  document.getElementById('fontDropdown').classList.toggle('open');
+}
+function setFont(f) {
+  document.documentElement.dataset.font = f;
+  document.querySelectorAll('.font-opt').forEach(o => o.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('fontDropdown').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.font-menu')) document.getElementById('fontDropdown').classList.remove('open');
+});
+
+// Mobile menu
+function toggleMobile() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal, .reveal-left').forEach(el => observer.observe(el));
+
+// Active nav on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) cur = s.id; });
+  navLinks.forEach(a => {
+    const isActive = a.getAttribute('href') === '#' + cur;
+    a.style.color = isActive ? 'var(--accent)' : '';
+  });
+});
+
+// Stagger reveal on spec grid
+document.querySelectorAll('.spec-card, .trans-card, .testi-card, .price-card').forEach((el, i) => {
+  el.style.transitionDelay = `${(i % 3) * 0.1}s`;
+  el.classList.add('reveal');
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
