@@ -23,9 +23,17 @@ function PublicLayout() {
 }
 
 export default function App() {
+  const getRouterBasename = () => {
+    const configuredBase = import.meta.env.VITE_ROUTER_BASE || '';
+    if (configuredBase && window.location.pathname.startsWith(configuredBase)) {
+      return configuredBase;
+    }
+    return '/';
+  };
+
   return (
     <ToastProvider>
-      <Router basename={import.meta.env.VITE_ROUTER_BASE || '/'}>
+      <Router basename={getRouterBasename()}>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
