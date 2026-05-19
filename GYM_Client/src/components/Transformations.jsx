@@ -1,5 +1,5 @@
 import React from 'react';
-import { TRANSFORMATIONS } from '../constants/data';
+import useFetchData from '../hooks/useFetchData';
 
 function BodySVG({ type }) {
   if (type === 'male_skinny_fat') {
@@ -80,42 +80,78 @@ function BodySVG({ type }) {
 }
 
 export default function Transformations() {
+  const { data: dbHeading } = useFetchData('transformations_heading/active', []);
+  const { data: dbTransformations } = useFetchData('transformations/active', []);
+
+  const heading = dbHeading && dbHeading.length > 0 ? dbHeading[0] : {
+    tag: "Client Results",
+    title: "Real Client Results",
+    desc: "Check out the before/after physical metrics of clients."
+  };
+
+  const transformations = dbTransformations && dbTransformations.length > 0 ? dbTransformations : [
+    {
+      name: 'James K.',
+      detail: '32 · Sales Director · 6-Month Program',
+      metrics: [{ val: '-22kg', label: 'Weight Lost' }, { val: '+14%', label: 'Muscle' }, { val: '6mo', label: 'Timeline' }],
+      beforeType: 'male_skinny_fat',
+      afterType: 'male_muscular'
+    },
+    {
+      name: 'Rania M.',
+      detail: '28 · Nurse · 4-Month Program',
+      metrics: [{ val: '-15kg', label: 'Weight Lost' }, { val: '-12%', label: 'Body Fat' }, { val: '4mo', label: 'Timeline' }],
+      beforeType: 'female_before',
+      afterType: 'female_after'
+    },
+    {
+      name: 'Yusuf A.',
+      detail: '24 · Student Athlete · 5-Month Program',
+      metrics: [{ val: '+18kg', label: 'Muscle' }, { val: '180kg', label: 'Deadlift' }, { val: '5mo', label: 'Timeline' }],
+      beforeType: 'male_athletic_before',
+      afterType: 'male_athletic_after'
+    }
+  ];
+
   return (
     <section className="transformations" id="transformations">
       <div className="container">
         <div className="reveal" style={{ marginBottom: '3.5rem' }}>
-          <div className="section-label">Client Results</div>
-          <h2 className="section-title">Real <span class="dim">Transformations</span></h2>
-          <p className="section-desc">These results represent real clients with real lives — documented with consistency and time. No photoshop, no steroids, no shortcuts.</p>
+          <div className="section-label">{heading.tag}</div>
+          <h2 className="section-title">{heading.title}</h2>
+          <p className="section-desc">{heading.desc}</p>
         </div>
         <div className="trans-grid">
-          {TRANSFORMATIONS.map((t, idx) => (
-            <div className="trans-card reveal" key={t.name || idx}>
-              <div className="before-after">
-                <div className="ba-side before">
-                  <span className="ba-label">Before</span>
-                  <BodySVG type={t.beforeType} />
+          {transformations.map((t, idx) => {
+            const metrics = Array.isArray(t.metrics) ? t.metrics : [];
+            return (
+              <div className="trans-card reveal" key={t.name || idx}>
+                <div className="before-after">
+                  <div className="ba-side before">
+                    <span className="ba-label">Before</span>
+                    <BodySVG type={t.beforeType} />
+                  </div>
+                  <div className="ba-divider"></div>
+                  <div className="ba-side after">
+                    <span className="ba-label">After</span>
+                    <BodySVG type={t.afterType} />
+                  </div>
                 </div>
-                <div className="ba-divider"></div>
-                <div className="ba-side after">
-                  <span className="ba-label">After</span>
-                  <BodySVG type={t.afterType} />
+                <div className="trans-body">
+                  <div className="trans-name">{t.name}</div>
+                  <div className="trans-detail">{t.detail}</div>
+                  <div className="trans-metrics">
+                    {metrics.map((metric, metricIdx) => (
+                      <div className="t-metric" key={metricIdx}>
+                        <div className="t-metric-val">{metric.val}</div>
+                        <div className="t-metric-label">{metric.label}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-              <div className="trans-body">
-                <div className="trans-name">{t.name}</div>
-                <div className="trans-detail">{t.detail}</div>
-                <div className="trans-metrics">
-                  {t.metrics && t.metrics.map((metric, metricIdx) => (
-                    <div className="t-metric" key={metricIdx}>
-                      <div className="t-metric-val">{metric.val}</div>
-                      <div className="t-metric-label">{metric.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

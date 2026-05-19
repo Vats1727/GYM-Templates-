@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Sun, Moon } from 'lucide-react';
+import useFetchData from '../hooks/useFetchData';
 
 export default function Navbar({ theme, setTheme, font, setFont }) {
   const [fontMenuOpen, setFontMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const { data: dbNavbar } = useFetchData('navbar/active', []);
+  const navbar = dbNavbar && dbNavbar.length > 0 ? dbNavbar[0] : {
+    logo_text: "MARCUS",
+    logo_accent: "REID",
+    cta_text: "Start Now"
+  };
 
   const toggleTheme = () => {
     setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
@@ -38,7 +46,7 @@ export default function Navbar({ theme, setTheme, font, setFont }) {
     <>
       <nav>
         <div className="nav-logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }}>
-          MARCUS<span className="slash">/</span>REID
+          {navbar.logo_text}<span className="slash">/</span>{navbar.logo_accent}
         </div>
 
         <ul className="nav-links">
@@ -63,7 +71,7 @@ export default function Navbar({ theme, setTheme, font, setFont }) {
             {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
           </button>
 
-          <button className="btn-nav" onClick={() => scrollToSection('programs')}>Start Now</button>
+          <button className="btn-nav" onClick={() => scrollToSection('programs')}>{navbar.cta_text}</button>
 
           <div className="hamburger" onClick={() => setMobileMenuOpen(prev => !prev)}>
             <span></span>
@@ -79,6 +87,7 @@ export default function Navbar({ theme, setTheme, font, setFont }) {
         <a href="#transformations" onClick={(e) => { e.preventDefault(); scrollToSection('transformations'); }}>Results</a>
         <a href="#programs" onClick={(e) => { e.preventDefault(); scrollToSection('programs'); }}>Programs</a>
         <a href="#testimonials" onClick={(e) => { e.preventDefault(); scrollToSection('testimonials'); }}>Reviews</a>
+        <button className="btn-nav mobile-cta" onClick={() => scrollToSection('programs')} style={{ marginTop: '0.5rem', width: '100%', display: 'block' }}>{navbar.cta_text}</button>
       </div>
     </>
   );

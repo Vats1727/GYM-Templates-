@@ -1,16 +1,21 @@
 import React from 'react';
+import useFetchData from '../hooks/useFetchData';
 
 export default function Ticker() {
-  const items = [
-    "Strength Training",
-    "Body Recomposition",
-    "Athletic Performance",
-    "Nutrition Coaching",
-    "Fat Loss",
-    "Muscle Building",
-    "Online Coaching",
-    "Mobility & Recovery"
-  ];
+  const { data: dbSpecialties } = useFetchData('specialties/active', []);
+
+  const items = dbSpecialties && dbSpecialties.length > 0
+    ? dbSpecialties.map(spec => spec.title)
+    : [
+        "Strength Training",
+        "Body Recomposition",
+        "Athletic Performance",
+        "Nutrition Coaching",
+        "Fat Loss",
+        "Muscle Building",
+        "Online Coaching",
+        "Mobility & Recovery"
+      ];
 
   return (
     <div className="ticker">

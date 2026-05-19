@@ -1,13 +1,28 @@
 import React from 'react';
 import { MessageCircle, Mail, MapPin, Clock, Zap } from 'lucide-react';
+import useFetchData from '../hooks/useFetchData';
 
 export default function Footer() {
+  const { data: dbFooter } = useFetchData('footer/active', []);
+
+  const footer = dbFooter && dbFooter.length > 0 ? dbFooter[0] : {
+    logo_text: "MARCUS",
+    logo_accent: "REID",
+    description: "Elite personal training and online coaching for those who are serious about results. Based in Dubai, coaching clients globally.",
+    email: "marcus@marcusreid.fit",
+    whatsapp: "+971 50 123 4567",
+    address: "Dubai, UAE & Online",
+    hours: "7 Days · 6 AM – 9 PM GST"
+  };
+
   const handleBooking = () => {
-    alert('Redirecting to Calendly or booking page');
+    const el = document.getElementById('programs');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleWhatsApp = () => {
-    window.open('https://wa.me/+971501234567', '_blank');
+    const number = footer.whatsapp ? footer.whatsapp.replace(/\s+/g, '') : '+971501234567';
+    window.open(`https://wa.me/${number.replace('+', '')}`, '_blank');
   };
 
   const scrollToSection = (id) => {
@@ -37,8 +52,8 @@ export default function Footer() {
       <footer>
         <div className="footer-inner">
           <div>
-            <div className="footer-logo">MARCUS<span>/REID</span></div>
-            <p className="footer-bio">Elite personal training and online coaching for those who are serious about results. Based in Dubai, coaching clients globally.</p>
+            <div className="footer-logo">{footer.logo_text}<span>/{footer.logo_accent}</span></div>
+            <p className="footer-bio">{footer.description}</p>
             <div className="footer-social">
               {/* Instagram SVG */}
               <div className="social-btn" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -92,25 +107,25 @@ export default function Footer() {
             <ul>
               <li style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--text3)' }}>
                 <Mail size={16} style={{ color: 'var(--accent)' }} />
-                <a href="mailto:marcus@marcusreid.fit" style={{ color: 'inherit' }}>marcus@marcusreid.fit</a>
+                <a href={`mailto:${footer.email}`} style={{ color: 'inherit' }}>{footer.email}</a>
               </li>
               <li style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--text3)', cursor: 'pointer' }} onClick={handleWhatsApp}>
                 <MessageCircle size={16} style={{ color: 'var(--accent)' }} />
-                <span>WhatsApp +971 50 123 4567</span>
+                <span>WhatsApp {footer.whatsapp}</span>
               </li>
               <li style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--text3)' }}>
                 <MapPin size={16} style={{ color: 'var(--accent)' }} />
-                <span>Dubai, UAE & Online</span>
+                <span>{footer.address}</span>
               </li>
               <li style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--text3)' }}>
                 <Clock size={16} style={{ color: 'var(--accent)' }} />
-                <span>7 Days · 6 AM – 9 PM GST</span>
+                <span>{footer.hours}</span>
               </li>
             </ul>
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© 2025 Marcus Reid Fitness. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} {footer.logo_text} {footer.logo_accent} Fitness. All rights reserved.</span>
           <span style={{ color: 'var(--accent)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
             NO EXCUSES. ONLY RESULTS. <Zap size={14} fill="currentColor" />
           </span>

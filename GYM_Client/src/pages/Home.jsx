@@ -21,17 +21,56 @@ export default function Home() {
       { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
     );
 
-    // Stagger reveal on grid card items
-    const cards = document.querySelectorAll(
-      '.spec-card, .trans-card, .testi-card, .price-card'
-    );
-    cards.forEach((el, i) => {
-      el.style.transitionDelay = `${(i % 3) * 0.1}s`;
-      el.classList.add('reveal');
+    const observeNewElements = () => {
+      // Find all target elements that need reveal
+      const elements = document.querySelectorAll(
+        '.reveal, .reveal-left, .spec-card, .trans-card, .testi-card, .price-card'
+      );
+      
+      elements.forEach((el) => {
+        // If it's a grid item card, ensure it has the reveal class and set proper stagger delay
+        if (
+          el.classList.contains('spec-card') ||
+          el.classList.contains('trans-card') ||
+          el.classList.contains('testi-card') ||
+          el.classList.contains('price-card')
+        ) {
+          if (!el.classList.contains('reveal')) {
+            el.classList.add('reveal');
+          }
+          
+          // Stagger based on card index within its parent grid container
+          const parent = el.parentElement;
+          if (parent) {
+            const siblings = Array.from(parent.children).filter(c =>
+              c.classList.contains('spec-card') ||
+              c.classList.contains('trans-card') ||
+              c.classList.contains('testi-card') ||
+              c.classList.contains('price-card')
+            );
+            const index = siblings.indexOf(el);
+            if (index !== -1) {
+              el.style.transitionDelay = `${(index % 3) * 0.1}s`;
+            }
+          }
+        }
+        
+        observer.observe(el);
+      });
+    };
+
+    // Run initial observation
+    observeNewElements();
+
+    // Set up MutationObserver to watch for dynamically loaded/rendered elements
+    const mutationObserver = new MutationObserver(() => {
+      observeNewElements();
     });
 
-    const elementsToReveal = document.querySelectorAll('.reveal, .reveal-left');
-    elementsToReveal.forEach((el) => observer.observe(el));
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
 
     // Active nav link highlight on scroll
     const sections = document.querySelectorAll('section[id]');
@@ -59,7 +98,8 @@ export default function Home() {
     window.addEventListener('scroll', handleScroll);
 
     return () => {
-      elementsToReveal.forEach((el) => observer.unobserve(el));
+      observer.disconnect();
+      mutationObserver.disconnect();
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
